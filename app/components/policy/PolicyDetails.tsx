@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState, useCallback } from "react";
+import Image from "next/image";
 import { useInsure } from "../../store/insureStore";
 
 function ProgressRow({ label, value, color }: { label: string; value: number; color: string }) {
@@ -20,7 +21,7 @@ function ProgressRow({ label, value, color }: { label: string; value: number; co
 export default function PolicyDetails() {
   const { activePolicyNumber, policies, setActivePage, setActivePolicyNumber } = useInsure();
   const policy = policies.find(p => p.policyNumber === activePolicyNumber);
-  if (!policy) return null;
+  
   const uploadInputRef = useRef<HTMLInputElement | null>(null);
   const [uploadedDocs, setUploadedDocs] = useState<{ name: string; sizeKb: number; url?: string; mime?: string }[]>([
     { name: "Policy_Document.pdf", sizeKb: 128, url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", mime: "application/pdf" },
@@ -29,6 +30,18 @@ export default function PolicyDetails() {
   const [missingDocs, setMissingDocs] = useState<string[]>(["Policy Document", "Photo ID", "Address Proof"]);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [previewMime, setPreviewMime] = useState<string | undefined>(undefined);
+  const [isDropOver, setIsDropOver] = useState(false);
+  
+  const onDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => { e.preventDefault(); setIsDropOver(true); }, []);
+  const onDragLeave = useCallback((e: React.DragEvent<HTMLDivElement>) => { e.preventDefault(); setIsDropOver(false); }, []);
+  const onDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => { e.preventDefault(); setIsDropOver(false); const files = e.dataTransfer.files; onFilesSelected(files); }, []);
+  
+  const missingStatus = useMemo(() => {
+    return missingDocs
+      .map(req => ({ name: req, satisfied: uploadedDocs.some(u => u.name.toLowerCase().includes(req.toLowerCase().split(" ")[0])) }))
+      .filter(item => !item.satisfied);
+  }, [missingDocs, uploadedDocs]);
+
   function handleUploadClick() { uploadInputRef.current?.click(); }
   function onFilesSelected(files: FileList | null) {
     if (!files) return;
@@ -36,17 +49,10 @@ export default function PolicyDetails() {
     setUploadedDocs(prev => [...prev, ...newItems]);
     setMissingDocs(prev => prev.filter(req => !newItems.some(n => n.name.toLowerCase().includes(req.split(" ")[0].toLowerCase()))));
   }
-  const missingStatus = useMemo(() => {
-    return missingDocs
-      .map(req => ({ name: req, satisfied: uploadedDocs.some(u => u.name.toLowerCase().includes(req.toLowerCase().split(" ")[0])) }))
-      .filter(item => !item.satisfied);
-  }, [missingDocs, uploadedDocs]);
   function openPreview(url?: string, mime?: string) { if (!url) return; setPreviewUrl(url); setPreviewMime(mime); }
   function closePreview() { setPreviewUrl(null); setPreviewMime(undefined); }
-  const [isDropOver, setIsDropOver] = useState(false);
-  const onDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => { e.preventDefault(); setIsDropOver(true); }, []);
-  const onDragLeave = useCallback((e: React.DragEvent<HTMLDivElement>) => { e.preventDefault(); setIsDropOver(false); }, []);
-  const onDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => { e.preventDefault(); setIsDropOver(false); const files = e.dataTransfer.files; onFilesSelected(files); }, []);
+
+  if (!policy) return null;
 
   return (
     <main className="page-content p-8 animate-fade-in">
@@ -92,7 +98,7 @@ export default function PolicyDetails() {
                   <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0"><i className="fa-solid fa-bed-pulse text-blue-500" /></div>
                   <div>
                     <h4 className="font-semibold text-gray-800">In-patient Hospitalization</h4>
-                    <p className="text-sm text-gray-700">Covers room rent, ICU charges, doctor's fees, and other related expenses.</p>
+                    <p className="text-sm text-gray-700">Covers room rent, ICU charges, doctor&apos;s fees, and other related expenses.</p>
                   </div>
                 </div>
                 <div className="p-4 border border-gray-100 rounded-xl flex items-start space-x-4">
@@ -228,7 +234,7 @@ export default function PolicyDetails() {
             </div>
             <div className="p-0 h-[70vh] overflow-auto">
               {previewMime?.startsWith("image/") ? (
-                <img src={previewUrl} alt="Preview" className="w-full h-auto" />
+                <Image src={previewUrl} alt="Preview" width={800} height={600} className="w-full h-auto" />
               ) : (
                 <iframe src={previewUrl} title="Preview" className="w-full h-full" />
               )}

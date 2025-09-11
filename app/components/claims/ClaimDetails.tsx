@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import Image from "next/image";
 import { useInsure } from "../../store/insureStore";
 
 function ClaimStatusBadge({ status }: { status: string }) {
@@ -65,12 +66,12 @@ export default function ClaimDetails() {
               return (
                 <div key={idx} className={`${isUser ? "user-message flex justify-end" : "agent-message flex justify-start"} animate-slide-in-up`}>
                   <div className="flex items-start space-x-3 max-w-md">
-                    {!isUser && <img src={avatar} alt="Avatar" className="w-8 h-8 rounded-full flex-shrink-0" />}
+                    {!isUser && <Image src={avatar} alt="Avatar" width={32} height={32} className="w-8 h-8 rounded-full flex-shrink-0" />}
                     <div>
                       <div className={`chat-bubble p-4 rounded-2xl shadow-sm ${bubbleClass}`}><p className="text-sm">{u.message}</p></div>
                       <p className="text-xs text-gray-600 mt-1.5 px-2">{name}, {u.timestamp}</p>
                     </div>
-                    {isUser && <img src={avatar} alt="Avatar" className="w-8 h-8 rounded-full flex-shrink-0" />}
+                    {isUser && <Image src={avatar} alt="Avatar" width={32} height={32} className="w-8 h-8 rounded-full flex-shrink-0" />}
                   </div>
                 </div>
               );
@@ -82,7 +83,7 @@ export default function ClaimDetails() {
           <div className="bg-white/80 rounded-xl shadow-sm p-6 animate-slide-up transition-all duration-200 hover:shadow-md hover:-translate-y-0.5" style={{ animationDelay: "100ms" }}>
             <h3 className="font-semibold text-gray-800 mb-4">Assigned Agent</h3>
             <div className="flex items-center space-x-4">
-              <img src={claim.agent.avatar} alt="Agent" className="w-10 h-10 rounded-full" />
+              <Image src={claim.agent.avatar} alt="Agent" width={40} height={40} className="w-10 h-10 rounded-full" />
               <div>
                 <p className="font-semibold text-gray-900">{claim.agent.name}</p>
                 <p className="text-xs text-gray-700">Your point of contact</p>

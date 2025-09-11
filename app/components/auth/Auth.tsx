@@ -247,7 +247,7 @@ export default function Auth() {
               {forgotStep === "enter" && (
                 <>
                   <h2 className="text-3xl font-bold text-gray-800 mb-2 text-center">Forgot Password?</h2>
-                  <p className="text-gray-700 mb-6 text-center">No worries, we'll send you reset instructions.</p>
+                  <p className="text-gray-700 mb-6 text-center">No worries, we&apos;ll send you reset instructions.</p>
                   <form onSubmit={handleForgotStep}>
                     <div className="relative mb-4">
                       <span className="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -279,7 +279,7 @@ export default function Auth() {
               {forgotStep === "otp" && (
                 <>
                   <h2 className="text-3xl font-bold text-gray-800 mb-2 text-center">Enter Security Code</h2>
-                  <p className="text-gray-700 mb-6 text-center">We've sent a 6-digit code to your registered contact.</p>
+                  <p className="text-gray-700 mb-6 text-center">We&apos;ve sent a 6-digit code to your registered contact.</p>
                   <form onSubmit={handleForgotStep}>
                     <div className="flex justify-center gap-2 mb-6">
                       {Array.from({length:6}).map((_,i)=> (

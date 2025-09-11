@@ -53,6 +53,34 @@ export default function ClaimFilingModal() {
     }
   }, []);
 
+  const handleSubmit = useCallback(() => {
+    const selectedPolicy = policies.find(p => p.policyNumber === claimData.selectedPolicyId);
+    if (!selectedPolicy) return;
+
+    // Create a new claim object
+    const newClaim = {
+      id: `CLM-${Date.now()}`,
+      policyNumber: selectedPolicy.policyNumber,
+      dateFiled: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+      dateOfIncident: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+      status: "Processing" as const,
+      agent: { 
+        name: "Sarah Johnson", 
+        avatar: "https://placehold.co/40x40/60A5FA/FFFFFF?text=SJ" 
+      },
+      updates: [
+        { 
+          from: "agent" as const, 
+          message: "Your claim has been received and is under review.", 
+          timestamp: new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })
+        }
+      ]
+    };
+
+    addClaim(newClaim);
+    closeClaimFiling();
+  }, [claimData, policies, addClaim, closeClaimFiling]);
+
   const nextStep = useCallback(() => {
     if (currentStep < totalSteps) {
       goToStep(currentStep + 1);
@@ -60,7 +88,7 @@ export default function ClaimFilingModal() {
       // Submit the claim
       handleSubmit();
     }
-  }, [currentStep, goToStep]);
+  }, [currentStep, goToStep, handleSubmit]);
 
   const prevStep = useCallback(() => {
     if (currentStep > 1) {
@@ -107,34 +135,6 @@ export default function ClaimFilingModal() {
       [sectionId]: !prev[sectionId]
     }));
   }, []);
-
-  const handleSubmit = useCallback(() => {
-    const selectedPolicy = policies.find(p => p.policyNumber === claimData.selectedPolicyId);
-    if (!selectedPolicy) return;
-
-    // Create a new claim object
-    const newClaim = {
-      id: `CLM-${Date.now()}`,
-      policyNumber: selectedPolicy.policyNumber,
-      dateFiled: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
-      dateOfIncident: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
-      status: "Processing" as const,
-      agent: { 
-        name: "Sarah Johnson", 
-        avatar: "https://placehold.co/40x40/60A5FA/FFFFFF?text=SJ" 
-      },
-      updates: [
-        { 
-          from: "agent" as const, 
-          message: "Your claim has been received and is under review.", 
-          timestamp: new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })
-        }
-      ]
-    };
-
-    addClaim(newClaim);
-    closeClaimFiling();
-  }, [claimData, policies, addClaim, closeClaimFiling]);
 
   const progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
 

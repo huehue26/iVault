@@ -6,7 +6,6 @@ import {
   Sidebar, 
   Home, 
   PolicyBank, 
-  ClaimsList, 
   ClaimDetails, 
   PolicyDetails, 
   ClaimAssistance,

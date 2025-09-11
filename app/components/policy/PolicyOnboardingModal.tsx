@@ -121,6 +121,26 @@ export default function PolicyOnboardingModal() {
     }
   }, []);
 
+  const handleSubmit = useCallback(() => {
+    // Create a new policy object
+    const newPolicy = {
+      type: `${policyData.policyType} Insurance`,
+      insurer: policyData.questions.providerName || `${policyData.policyType} Provider`,
+      policyNumber: `${policyData.policyType?.substring(0, 2).toUpperCase()}-${Date.now()}`,
+      premium: Math.floor(Math.random() * 500) + 50, // Random premium for demo
+      expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      coverageAmount: Math.floor(Math.random() * 100000) + 10000, // Random coverage amount for demo
+      documents: 1 + Object.keys(policyData.additionalDocs).length,
+      status: "Active" as const,
+      icon: getPolicyIcon(policyData.policyType || ''),
+      iconBg: getPolicyIconBg(policyData.policyType || ''),
+      iconColor: getPolicyIconColor(policyData.policyType || '')
+    };
+
+    addPolicy(newPolicy);
+    closePolicyOnboarding();
+  }, [policyData, addPolicy, closePolicyOnboarding]);
+
   const nextStep = useCallback(() => {
     if (currentStep < totalSteps) {
       goToStep(currentStep + 1);
@@ -128,7 +148,7 @@ export default function PolicyOnboardingModal() {
       // Submit the policy
       handleSubmit();
     }
-  }, [currentStep, goToStep]);
+  }, [currentStep, goToStep, handleSubmit]);
 
   const prevStep = useCallback(() => {
     if (currentStep > 1) {
@@ -198,25 +218,6 @@ export default function PolicyOnboardingModal() {
       [sectionId]: !prev[sectionId]
     }));
   }, []);
-
-  const handleSubmit = useCallback(() => {
-    // Create a new policy object
-    const newPolicy = {
-      type: `${policyData.policyType} Insurance`,
-      insurer: policyData.questions.providerName || `${policyData.policyType} Provider`,
-      policyNumber: `${policyData.policyType?.substring(0, 2).toUpperCase()}-${Date.now()}`,
-      premium: Math.floor(Math.random() * 500) + 50, // Random premium for demo
-      expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      documents: 1 + Object.keys(policyData.additionalDocs).length,
-      status: "Active" as const,
-      icon: getPolicyIcon(policyData.policyType || ''),
-      iconBg: getPolicyIconBg(policyData.policyType || ''),
-      iconColor: getPolicyIconColor(policyData.policyType || '')
-    };
-
-    addPolicy(newPolicy);
-    closePolicyOnboarding();
-  }, [policyData, addPolicy, closePolicyOnboarding]);
 
   const getPolicyIcon = (type: string) => {
     const icons: Record<string, string> = {
@@ -614,7 +615,7 @@ export default function PolicyOnboardingModal() {
                         <span className="text-gray-700">Main Policy Document</span>
                         <i className="fa-solid fa-check-circle text-green-500"></i>
                       </li>
-                      {Object.entries(policyData.additionalDocs).map(([key, file]) => {
+                      {Object.entries(policyData.additionalDocs).map(([key]) => {
                         const docName = requiredDocs[policyData.policyType || '']?.find(d => d.key === key)?.name || key;
                         return (
                           <li key={key} className="flex items-center justify-between">

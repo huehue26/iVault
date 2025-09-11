@@ -163,7 +163,7 @@ export function InsureProvider({ children }: { children: React.ReactNode }) {
       uploadedFile, 
       ...actions 
     }),
-    [policies, claims, activePage, activeClaimId, activePolicyNumber, modals, isAuthenticated, uploadedFile]
+    [policies, claims, activePage, activeClaimId, activePolicyNumber, modals, isAuthenticated, uploadedFile, actions]
   );
 
   return <InsureContext.Provider value={value}>{children}</InsureContext.Provider>;

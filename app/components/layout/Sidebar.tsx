@@ -3,10 +3,12 @@
 import React, { memo, useCallback } from "react";
 import { useInsure } from "../../store/insureStore";
 
+type PageKey = "homePage" | "loginPage" | "policyBankPage" | "claimsPage" | "claimDetailsPage" | "policyDetailsPage" | "claimAssistancePage";
+
 function Sidebar() {
   const { activePage, setActivePage, isAuthenticated, logout } = useInsure();
   
-  const handlePageChange = useCallback((key: any) => {
+  const handlePageChange = useCallback((key: PageKey) => {
     setActivePage(key);
   }, [setActivePage]);
 
@@ -14,13 +16,13 @@ function Sidebar() {
     logout();
   }, [logout]);
 
-  const link = (key: any, icon: string, label: string, onClick?: () => void) => (
+  const link = (key: PageKey | null, icon: string, label: string, onClick?: () => void) => (
     <a
       href="#"
       onClick={(e) => { 
         e.preventDefault(); 
         if (onClick) onClick(); 
-        else handlePageChange(key); 
+        else if (key) handlePageChange(key); 
       }}
       className={`nav-link flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors text-base ${activePage === key ? "nav-active" : "text-gray-700 hover:bg-gray-50 hover:text-insurance-blue"}`}
     >

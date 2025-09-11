@@ -1,10 +1,11 @@
 "use client";
 
 import React, { memo, useCallback } from "react";
+import Image from "next/image";
 import { useInsure } from "../../store/insureStore";
 
 function Header() {
-  const { openAddPolicy, openFileClaim, activePage, setActivePage } = useInsure();
+  const { setActivePage } = useInsure();
 
   const handleBackToHome = useCallback(() => {
     setActivePage("homePage");
@@ -42,7 +43,7 @@ function Header() {
             </button>
 
             <div className="flex items-center space-x-3 cursor-pointer hover:opacity-90 transition-opacity">
-              <img src="https://placehold.co/32x32/E2E8F0/475569?text=S" alt="Profile" className="w-8 h-8 rounded-full" />
+              <Image src="https://placehold.co/32x32/E2E8F0/475569?text=S" alt="Profile" width={32} height={32} className="w-8 h-8 rounded-full" />
               <div className="hidden md:block">
                 <p className="text-sm font-medium text-gray-700">Sarah Johnson</p>
                 <p className="text-xs text-gray-700">Premium Member</p>

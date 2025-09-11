@@ -32,13 +32,6 @@ export default function PolicyBank() {
     return matchesSearch && matchesCategory && matchesStatus;
   }), [policies, searchTerm, selectedCategory, selectedStatus]);
 
-  const statusBadge = (status: string) => (
-    status === "Active" ? (
-      <span className="bg-success-green/10 text-success-green text-xs font-medium px-3 py-1 rounded-full">Active</span>
-    ) : (
-      <span className="bg-accent-orange/10 text-accent-orange text-xs font-medium px-3 py-1 rounded-full">Expiring Soon</span>
-    )
-  );
 
   return (
     <main className="page-content p-8">
@@ -163,10 +156,10 @@ export default function PolicyBank() {
   );
 }
 
-function PolicyListView({ policies }: { policies: any[] }) {
+function PolicyListView({ policies }: { policies: Array<{ policyNumber: string; type: string; insurer: string; premium: number; coverageAmount: number; expires: string; status: string; iconBg: string; iconColor: string; icon: string }> }) {
   const { setActivePolicyNumber, setActivePage } = useInsure();
   const sorted = useMemo(() => [...policies].sort((a, b) => new Date(a.expires).getTime() - new Date(b.expires).getTime()), [policies]);
-  const row = (p: any, idx: number) => (
+  const row = (p: { policyNumber: string; type: string; insurer: string; premium: number; coverageAmount: number; expires: string; status: string; iconBg: string; iconColor: string; icon: string }, idx: number) => (
     <div key={p.policyNumber} onClick={() => { setActivePolicyNumber(p.policyNumber); setActivePage("policyDetailsPage"); }} className="group grid grid-cols-12 gap-4 items-center px-4 py-4 bg-white rounded-xl shadow-sm border border-gray-100 cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg animate-list-enter" style={{ animationDelay: `${idx * 60}ms` }}>
       <div className="col-span-12 md:col-span-3 flex items-center space-x-3">
         <div className={`w-10 h-10 ${p.iconBg} rounded-lg flex items-center justify-center flex-shrink-0 transition-transform duration-200 group-hover:scale-110`}><i className={`${p.icon} ${p.iconColor} text-base`} /></div>
@@ -177,7 +170,7 @@ function PolicyListView({ policies }: { policies: any[] }) {
       </div>
       <div className="col-span-6 md:col-span-2 text-sm text-gray-600 font-mono">{p.policyNumber}</div>
       <div className="col-span-6 md:col-span-2 text-sm text-gray-800 font-medium">${p.premium}/mo</div>
-      <div className="col-span-6 md:col-span-2 text-sm text-gray-800 font-medium">${p.coverageAmount || '0'}</div>
+      <div className="col-span-6 md:col-span-2 text-sm text-gray-800 font-medium">${p.coverageAmount}</div>
       <div className={`col-span-6 md:col-span-2 text-sm font-medium ${p.status === "Expiring Soon" ? "text-warning-red" : "text-gray-900"}`}>{formatDate(p.expires)}</div>
       <div className="col-span-6 md:col-span-1 flex items-center justify-start">
         {p.status === "Active" && (
@@ -207,7 +200,7 @@ function PolicyListView({ policies }: { policies: any[] }) {
   );
 }
 
-function EmptyDropZone({ isDragOver, onDragOver, onDragLeave, onDrop, onClickCta }: { isDragOver: boolean; onDragOver: any; onDragLeave: any; onDrop: any; onClickCta: () => void; }) {
+function EmptyDropZone({ isDragOver, onDragOver, onDragLeave, onDrop, onClickCta }: { isDragOver: boolean; onDragOver: (e: React.DragEvent<HTMLDivElement>) => void; onDragLeave: (e: React.DragEvent<HTMLDivElement>) => void; onDrop: (e: React.DragEvent<HTMLDivElement>) => void; onClickCta: () => void; }) {
   return (
     <div className={`dropzone ${isDragOver ? "drag-over border-blue-500 bg-blue-50" : "border-brand-gray-200 bg-white"} flex flex-col items-center justify-center p-12 rounded-2xl`} onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop}>
       <div className={`w-20 h-20 rounded-full flex items-center justify-center mb-4 transition-transform ${isDragOver ? "scale-110 bg-blue-500 text-white animate-wiggle" : "bg-brand-gray-100 text-gray-700 animate-bounce-subtle"}`}>
