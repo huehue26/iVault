@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useInsure } from "../store/insureStore";
+import { useInsure } from "../../store/insureStore";
 
 type Mode = "signin" | "signup" | "forgot";
 
@@ -46,7 +46,10 @@ export default function Auth() {
     } else if (forgotStep === "reset") {
       if (!forgotData.newPassword || forgotData.newPassword.length < 6) e.newPassword = "Password must be at least 6 characters";
       if (!forgotData.confirmPassword) e.confirmPassword = "Please confirm your password";
-      if (forgotData.newPassword !== forgotData.confirmPassword) e.confirmPassword = "Passwords do not match";
+      if (forgotData.newPassword !== forgotData.confirmPassword) {
+        e.confirmPassword = "Passwords do not match";
+        e.passwordMismatch = "Passwords do not match. Please try again.";
+      }
     }
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -92,10 +95,24 @@ export default function Auth() {
     }
   }, [forgotStep]);
 
+  useEffect(() => {
+    // Real-time password validation
+    if (forgotStep === "reset" && forgotData.newPassword && forgotData.confirmPassword) {
+      if (forgotData.newPassword !== forgotData.confirmPassword) {
+        setErrors(prev => ({ ...prev, passwordMismatch: "Passwords do not match. Please try again." }));
+      } else {
+        setErrors(prev => {
+          const newErrors = { ...prev };
+          delete newErrors.passwordMismatch;
+          return newErrors;
+        });
+      }
+    }
+  }, [forgotStep, forgotData.newPassword, forgotData.confirmPassword]);
+
   return (
     <div className="bg-gray-50 flex justify-center items-center min-h-screen p-4">
       <div className="w-full max-w-5xl">
-        {/* Back to Home Button */}
         <div className="mb-6">
           <button 
             onClick={() => setActivePage("homePage")}
@@ -227,16 +244,6 @@ export default function Auth() {
         {mode === "forgot" && (
           <div className="relative rounded-2xl w-full min-h-[520px] shadow-2xl bg-white p-8 md:p-12 flex items-center justify-center">
             <div className="w-full max-w-md">
-              {/* Back to Home Button */}
-              <div className="mb-6">
-                <button 
-                  onClick={() => setActivePage("homePage")}
-                  className="flex items-center text-gray-600 hover:text-blue-600 transition-colors"
-                >
-                  <i className="fa-solid fa-arrow-left mr-2" />
-                  Back to Home
-                </button>
-              </div>
               {forgotStep === "enter" && (
                 <>
                   <h2 className="text-3xl font-bold text-gray-800 mb-2 text-center">Forgot Password?</h2>
@@ -369,7 +376,8 @@ export default function Auth() {
                         className={`bg-slate-100 border ${errors.confirmPassword ? "border-red-400" : "border-slate-200"} text-gray-900 text-sm rounded-lg w-full pl-10 p-3`} 
                       />
                     </div>
-                    {errors.confirmPassword && <p className="text-xs text-red-500 mb-4 text-left">{errors.confirmPassword}</p>}
+                    {errors.confirmPassword && <p className="text-xs text-red-500 mb-2 text-left">{errors.confirmPassword}</p>}
+                    {errors.passwordMismatch && <p className="text-xs text-red-500 mb-4 text-center bg-red-50 p-2 rounded-lg">{errors.passwordMismatch}</p>}
                     <button 
                       type="submit" 
                       disabled={!forgotData.newPassword.trim() || !forgotData.confirmPassword.trim() || forgotData.newPassword !== forgotData.confirmPassword}

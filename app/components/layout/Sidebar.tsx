@@ -1,7 +1,7 @@
 "use client";
 
 import React, { memo, useCallback } from "react";
-import { useInsure } from "../store/insureStore";
+import { useInsure } from "../../store/insureStore";
 
 function Sidebar() {
   const { activePage, setActivePage, isAuthenticated, logout } = useInsure();
@@ -22,7 +22,7 @@ function Sidebar() {
         if (onClick) onClick(); 
         else handlePageChange(key); 
       }}
-      className={`nav-link flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors text-sm ${activePage === key ? "nav-active" : "text-gray-700 hover:bg-gray-50 hover:text-insurance-blue"}`}
+      className={`nav-link flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors text-base ${activePage === key ? "nav-active" : "text-gray-700 hover:bg-gray-50 hover:text-insurance-blue"}`}
     >
       <i className={`${icon} w-5 text-center`} />
       <span>{label}</span>
@@ -30,7 +30,7 @@ function Sidebar() {
   );
 
   return (
-    <aside className="w-64 bg-white shadow-sm border-r border-gray-200 flex-shrink-0 animate-fade-in" style={{ animationDelay: "80ms" }}>
+    <aside className="w-96 bg-white shadow-sm border-r border-gray-200 flex-shrink-0 animate-fade-in" style={{ animationDelay: "80ms" }}>
       <div className="p-6 h-full flex flex-col">
         <div className="mb-8 animate-slide-up" style={{ animationDelay: "120ms" }}>
           <div className="flex items-center space-x-2 text-success-green mb-1">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { useInsure } from "../store/insureStore";
+import { useInsure } from "../../store/insureStore";
 
 function ClaimStatusBadge({ status }: { status: string }) {
   const map: Record<string, string> = {
@@ -54,7 +54,7 @@ export default function ClaimDetails() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 bg-white/80 rounded-xl shadow-sm flex flex-col animate-slide-up transition-all duration-200 hover:shadow-md hover:-translate-y-0.5" style={{ animationDelay: "80ms" }}>
-          <div className="p-6 space-y-6 flex-1 overflow-y-auto">
+          <div className="p-6 space-y-6 flex-1 overflow-y-auto h-[calc(100vh-200px)]">
             {claim.updates.map((u, idx) => {
               const isUser = u.from === "user";
               const avatar = isUser ? "https://placehold.co/32x32/E2E8F0/475569?text=S" : claim.agent.avatar;
@@ -125,7 +125,7 @@ function MessageInput({ disabled, onSend }: { disabled: boolean; onSend: (text: 
           placeholder={disabled ? "Messaging is disabled for denied claims." : "Ask your agent a question..."} 
           disabled={disabled} 
           onKeyPress={handleKeyPress}
-          className="w-full pl-4 pr-12 py-3 rounded-xl bg-gray-50 focus:ring-2 focus:ring-insurance-blue text-sm text-gray-900 disabled:bg-gray-100 disabled:text-gray-500 shadow-sm" 
+          className="w-full pl-4 pr-12 py-3 rounded-xl bg-white border-2 border-gray-300 focus:ring-2 focus:ring-insurance-blue focus:border-insurance-blue text-sm text-gray-900 disabled:bg-gray-100 disabled:text-gray-500 shadow-sm" 
         />
         <button onClick={() => { if (inputRef) { onSend(inputRef.value); inputRef.value = ""; } }} disabled={disabled} className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-insurance-blue hover:bg-insurance-blue/90 text-white rounded-lg flex items-center justify-center transition-colors disabled:bg-gray-400 shadow-sm">
           <i className="fa-solid fa-paper-plane" />

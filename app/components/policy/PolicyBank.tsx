@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { useInsure, formatDate } from "../store/insureStore";
+import { useInsure, formatDate } from "../../store/insureStore";
 
 export default function PolicyBank() {
   const { policies, openPolicyOnboarding, setActivePage, setActivePolicyNumber } = useInsure();
@@ -79,7 +79,7 @@ export default function PolicyBank() {
             <p className="text-gray-700 text-sm">Monthly Premium</p>
             <p className="text-3xl font-bold text-brand-gray-600">$880</p>
           </div>
-          <div className="bg-purple-100 text-purple-500 p-4 rounded-lg"><i className="fa-solid fa-dollar-sign text-xl" /></div>
+          <div className="bg-blue-100 text-blue-500 p-4 rounded-lg"><i className="fa-solid fa-dollar-sign text-xl" /></div>
         </div>
       </section>
 
@@ -87,12 +87,12 @@ export default function PolicyBank() {
         <div className="flex items-center gap-4 w-full">
           <div className="relative w-1/3">
             <i className="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-600" />
-            <input type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search policies..." className="w-full bg-gray-100 border-none rounded-lg py-3 pl-11 pr-4 focus:ring-2 focus:ring-brand-purple transition-all text-gray-800 placeholder-gray-500" />
+            <input type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search policies..." className="w-full bg-gray-100 border-none rounded-lg py-3 pl-11 pr-4 focus:ring-2 focus:ring-blue-500 transition-all text-gray-800 placeholder-gray-500" />
           </div>
-          <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} className="bg-gray-100 border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-brand-purple transition-all text-gray-800">
+          <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} className="bg-gray-100 border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-blue-500 transition-all text-gray-800">
             {categories.map(c => (<option key={c} value={c}>{c === "All" ? "All Categories" : c}</option>))}
           </select>
-          <select value={selectedStatus} onChange={(e) => setSelectedStatus(e.target.value)} className="bg-gray-100 border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-brand-purple transition-all text-gray-800">
+          <select value={selectedStatus} onChange={(e) => setSelectedStatus(e.target.value)} className="bg-gray-100 border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-blue-500 transition-all text-gray-800">
             {statuses.map(s => (<option key={s} value={s}>{s === "All" ? "All Status" : s}</option>))}
           </select>
         </div>

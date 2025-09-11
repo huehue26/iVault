@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState, useCallback } from "react";
-import { useInsure } from "../store/insureStore";
+import { useInsure } from "../../store/insureStore";
 
 function ProgressRow({ label, value, color }: { label: string; value: number; color: string }) {
   return (
@@ -70,7 +70,16 @@ export default function PolicyDetails() {
               </div>
             </div>
             <div className="text-center">
-              <button className="mt-1 px-5 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors">Renew Now</button>
+              <button 
+                className="mt-1 w-12 h-12 text-blue-600 hover:text-blue-700 transition-all duration-300 hover:scale-110 flex items-center justify-center group"
+                onClick={() => {
+                  // Download policy documents
+                  console.log('Downloading policy documents...');
+                }}
+                title="Download Policy Documents"
+              >
+                <i className="fa-solid fa-download text-lg group-hover:animate-bounce"></i>
+              </button>
             </div>
           </div>
 
@@ -94,7 +103,7 @@ export default function PolicyDetails() {
                   </div>
                 </div>
                 <div className="p-4 border border-gray-100 rounded-xl flex items-start space-x-4">
-                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0"><i className="fa-solid fa-clock text-purple-500" /></div>
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0"><i className="fa-solid fa-clock text-blue-500" /></div>
                   <div>
                     <h4 className="font-semibold text-gray-800">Day Care Procedures</h4>
                     <p className="text-sm text-gray-700">Covers medical treatments that do not require 24-hour hospitalization.</p>

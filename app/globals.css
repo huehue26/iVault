@@ -42,8 +42,9 @@ body {
 
 /* Navigation Active State */
 .nav-active {
-  background-color: #EDE9FE;
-  color: #8B5CF6;
+  background-color: #DBEAFE;
+  color: #2563EB;
+  font-weight: bold;
 }
 
 /* Icon Hover Effects */

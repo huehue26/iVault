@@ -1,6 +1,6 @@
 "use client";
 
-import { useInsure } from "../store/insureStore";
+import { useInsure } from "../../store/insureStore";
 
 export function AddPolicyModal() {
   const { modals, closeAddPolicy } = useInsure();

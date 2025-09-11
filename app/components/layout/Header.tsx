@@ -1,7 +1,7 @@
 "use client";
 
 import React, { memo, useCallback } from "react";
-import { useInsure } from "../store/insureStore";
+import { useInsure } from "../../store/insureStore";
 
 function Header() {
   const { openAddPolicy, openFileClaim, activePage, setActivePage } = useInsure();

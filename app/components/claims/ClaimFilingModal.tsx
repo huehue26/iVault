@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
-import { useInsure } from "../store/insureStore";
+import { useInsure } from "../../store/insureStore";
 
 interface ClaimData {
   selectedPolicyId: string | null;
@@ -238,7 +238,7 @@ export default function ClaimFilingModal() {
                 id="claim-details-text"
                 placeholder=" "
                 rows={10}
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-4 py-3 pt-5"
+                className="block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-4 py-3 pt-5 text-gray-900"
                 value={claimData.claimDetails}
                 onChange={(e) => updateClaimData({ claimDetails: e.target.value })}
               />
@@ -316,7 +316,7 @@ export default function ClaimFilingModal() {
                   onClick={() => toggleSection('policy')}
                 >
                   <h4 className="font-semibold text-gray-900">Selected Policy</h4>
-                  <i className={`fa-solid fa-chevron-down transition-transform duration-200 ${
+                  <i className={`fa-solid fa-chevron-down transition-transform duration-200 text-gray-700 ${
                     expandedSections['policy'] ? 'rotate-180' : ''
                   }`}></i>
                 </button>
@@ -347,7 +347,7 @@ export default function ClaimFilingModal() {
                   onClick={() => toggleSection('details')}
                 >
                   <h4 className="font-semibold text-gray-900">Claim Details</h4>
-                  <i className={`fa-solid fa-chevron-down transition-transform duration-200 ${
+                  <i className={`fa-solid fa-chevron-down transition-transform duration-200 text-gray-700 ${
                     expandedSections['details'] ? 'rotate-180' : ''
                   }`}></i>
                 </button>
@@ -370,7 +370,7 @@ export default function ClaimFilingModal() {
                   onClick={() => toggleSection('documents')}
                 >
                   <h4 className="font-semibold text-gray-900">Supporting Documents</h4>
-                  <i className={`fa-solid fa-chevron-down transition-transform duration-200 ${
+                  <i className={`fa-solid fa-chevron-down transition-transform duration-200 text-gray-700 ${
                     expandedSections['documents'] ? 'rotate-180' : ''
                   }`}></i>
                 </button>

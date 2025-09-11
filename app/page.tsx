@@ -1,20 +1,23 @@
 "use client";
 
 import React, { memo } from "react";
-import Header from "./components/Header";
-import Sidebar from "./components/Sidebar";
-import Home from "./components/Home";
-import PolicyBank from "./components/PolicyBank";
-import ClaimsList from "./components/ClaimsList";
-import ClaimDetails from "./components/ClaimDetails";
-import PolicyDetails from "./components/PolicyDetails";
-import ClaimAssistance from "./components/ClaimAssistance";
+import { 
+  Header, 
+  Sidebar, 
+  Home, 
+  PolicyBank, 
+  ClaimsList, 
+  ClaimDetails, 
+  PolicyDetails, 
+  ClaimAssistance,
+  AddPolicyModal,
+  FileClaimModal,
+  PolicyOnboardingModal,
+  ClaimFilingModal,
+  Auth,
+  WhatsAppFloatingIcon
+} from "./components";
 import { InsureProvider, useInsure } from "./store/insureStore";
-import { AddPolicyModal, FileClaimModal } from "./components/Modals";
-import PolicyOnboardingModal from "./components/PolicyOnboardingModal";
-import ClaimFilingModal from "./components/ClaimFilingModal";
-import Auth from "./components/Auth";
-import WhatsAppFloatingIcon from "./components/WhatsAppFloatingIcon";
 
 // Memoized components to prevent unnecessary re-renders
 const MemoizedHome = memo(Home);

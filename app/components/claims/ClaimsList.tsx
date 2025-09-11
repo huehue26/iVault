@@ -1,6 +1,6 @@
 "use client";
 
-import { useInsure } from "../store/insureStore";
+import { useInsure } from "../../store/insureStore";
 
 function ClaimStatusBadge({ status }: { status: string }) {
   const map: Record<string, string> = {

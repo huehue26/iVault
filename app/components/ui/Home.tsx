@@ -1,6 +1,6 @@
 "use client";
 
-import { useInsure } from "../store/insureStore";
+import { useInsure } from "../../store/insureStore";
 
 export default function Home() {
   const { showLoginPage, setActivePage } = useInsure();

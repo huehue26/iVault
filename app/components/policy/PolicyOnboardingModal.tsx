@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
-import { useInsure } from "../store/insureStore";
+import { useInsure } from "../../store/insureStore";
 
 interface PolicyData {
   policyFile: File | null;
@@ -235,7 +235,7 @@ export default function PolicyOnboardingModal() {
       Health: "bg-red-100",
       Auto: "bg-blue-100",
       Home: "bg-green-100",
-      Life: "bg-purple-100",
+      Life: "bg-blue-100",
       Travel: "bg-yellow-100",
       Other: "bg-gray-100"
     };
@@ -247,7 +247,7 @@ export default function PolicyOnboardingModal() {
       Health: "text-red-500",
       Auto: "text-blue-500",
       Home: "text-green-500",
-      Life: "text-purple-500",
+      Life: "text-blue-500",
       Travel: "text-yellow-500",
       Other: "text-gray-700"
     };
@@ -386,7 +386,7 @@ export default function PolicyOnboardingModal() {
                     type === 'Health' ? 'text-red-500' :
                     type === 'Auto' ? 'text-blue-500' :
                     type === 'Home' ? 'text-green-500' :
-                    type === 'Life' ? 'text-purple-500' :
+                    type === 'Life' ? 'text-blue-500' :
                     type === 'Travel' ? 'text-yellow-500' : 'text-gray-700'
                   }`}>
                     {type === 'Health' && <i className="fa-solid fa-heart-pulse text-2xl"></i>}
@@ -413,7 +413,7 @@ export default function PolicyOnboardingModal() {
                         type="text"
                         id={q.id}
                         placeholder=" "
-                        className="w-full px-4 py-3 pt-5 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-blue-500"
+                        className="w-full px-4 py-3 pt-5 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-blue-500 text-gray-900"
                         onChange={(e) => updatePolicyData({
                           questions: { ...policyData.questions, [q.id]: e.target.value }
                         })}
@@ -547,7 +547,7 @@ export default function PolicyOnboardingModal() {
                   onClick={() => toggleSection('policy-type')}
                 >
                   <h4 className="font-semibold text-gray-900">Policy Type</h4>
-                  <i className={`fa-solid fa-chevron-down transition-transform duration-200 ${
+                  <i className={`fa-solid fa-chevron-down transition-transform duration-200 text-gray-700 ${
                     expandedSections['policy-type'] ? 'rotate-180' : ''
                   }`}></i>
                 </button>
@@ -570,7 +570,7 @@ export default function PolicyOnboardingModal() {
                   onClick={() => toggleSection('details')}
                 >
                   <h4 className="font-semibold text-gray-900">Details</h4>
-                  <i className={`fa-solid fa-chevron-down transition-transform duration-200 ${
+                  <i className={`fa-solid fa-chevron-down transition-transform duration-200 text-gray-700 ${
                     expandedSections['details'] ? 'rotate-180' : ''
                   }`}></i>
                 </button>
@@ -603,7 +603,7 @@ export default function PolicyOnboardingModal() {
                   onClick={() => toggleSection('documents')}
                 >
                   <h4 className="font-semibold text-gray-900">Documents</h4>
-                  <i className={`fa-solid fa-chevron-down transition-transform duration-200 ${
+                  <i className={`fa-solid fa-chevron-down transition-transform duration-200 text-gray-700 ${
                     expandedSections['documents'] ? 'rotate-180' : ''
                   }`}></i>
                 </button>
