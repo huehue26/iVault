@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useMemo, useCallback } from "react";
 import { useInsure, formatDate } from "../../store/insureStore";
 
@@ -101,7 +99,12 @@ export default function PolicyBank() {
         ) : (
           <div id="policy-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredPolicies.map((p, idx) => (
-              <div key={p.policyNumber} onClick={() => { setActivePolicyNumber(p.policyNumber); setActivePage("policyDetailsPage"); }} className="bg-white p-6 rounded-2xl shadow-sm animate-card-enter hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer" style={{ animationDelay: `${idx * 80}ms` }}>
+              <div key={p.policyNumber} onClick={() => { setActivePolicyNumber(p.policyNumber); setActivePage("policyDetailsPage"); }} className="bg-white p-6 rounded-2xl shadow-sm animate-card-enter hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative" style={{ animationDelay: `${idx * 80}ms` }}>
+                {/* Group icon in top right corner - overlaying outside */}
+                <div className="absolute -top-2 -right-2 w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-colors duration-200 shadow-lg border-2 border-white">
+                  <i className="fa-solid fa-users text-white text-sm"></i>
+                </div>
+                
                 <div className="flex justify-between items-start mb-4">
                   <div className={`${p.iconBg} ${p.iconColor} w-12 h-12 flex items-center justify-center rounded-lg`}>
                     <i className={`${p.icon} text-2xl`} />
@@ -160,7 +163,11 @@ function PolicyListView({ policies }: { policies: Array<{ policyNumber: string; 
   const { setActivePolicyNumber, setActivePage } = useInsure();
   const sorted = useMemo(() => [...policies].sort((a, b) => new Date(a.expires).getTime() - new Date(b.expires).getTime()), [policies]);
   const row = (p: { policyNumber: string; type: string; insurer: string; premium: number; coverageAmount: number; expires: string; status: string; iconBg: string; iconColor: string; icon: string }, idx: number) => (
-    <div key={p.policyNumber} onClick={() => { setActivePolicyNumber(p.policyNumber); setActivePage("policyDetailsPage"); }} className="group grid grid-cols-12 gap-4 items-center px-4 py-4 bg-white rounded-xl shadow-sm border border-gray-100 cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg animate-list-enter" style={{ animationDelay: `${idx * 60}ms` }}>
+    <div key={p.policyNumber} onClick={() => { setActivePolicyNumber(p.policyNumber); setActivePage("policyDetailsPage"); }} className="group grid grid-cols-12 gap-4 items-center px-4 py-4 bg-white rounded-xl shadow-sm border border-gray-100 cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg animate-list-enter relative" style={{ animationDelay: `${idx * 60}ms` }}>
+      {/* Group icon in top right corner - overlaying outside */}
+      <div className="absolute -top-2 -right-2 w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-colors duration-200 shadow-lg border-2 border-white">
+        <i className="fa-solid fa-users text-white text-sm"></i>
+      </div>
       <div className="col-span-12 md:col-span-3 flex items-center space-x-3">
         <div className={`w-10 h-10 ${p.iconBg} rounded-lg flex items-center justify-center flex-shrink-0 transition-transform duration-200 group-hover:scale-110`}><i className={`${p.icon} ${p.iconColor} text-base`} /></div>
         <div>

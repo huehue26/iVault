@@ -29,14 +29,6 @@ function Header() {
           </div>
 
           <div className="flex items-center space-x-6">
-            <button 
-              onClick={handleBackToHome}
-              className="flex items-center text-gray-600 hover:text-blue-600 transition-colors"
-            >
-              <i className="fa-solid fa-home mr-2" />
-              Back to Home
-            </button>
-            
             <button className="relative p-2 text-gray-600 hover:text-insurance-blue transition-colors hover:scale-105 duration-200">
               <i className="fa-regular fa-bell text-xl" />
               <span className="absolute top-0 right-0 bg-accent-orange text-white text-xs rounded-full w-4 h-4 flex items-center justify-center text-[10px]">3</span>

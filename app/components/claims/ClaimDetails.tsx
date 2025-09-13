@@ -7,8 +7,8 @@ import { useInsure } from "../../store/insureStore";
 function ClaimStatusBadge({ status }: { status: string }) {
   const map: Record<string, string> = {
     Approved: "bg-success-green/10 text-success-green",
-    Processing: "bg-processing-blue/10 text-processing-blue",
-    Denied: "bg-denied-red/10 text-denied-red",
+    Processing: "bg-brand-blue-light text-brand-blue",
+    Denied: "bg-brand-red-light text-brand-red ",
   };
   const cls = map[status] || "bg-gray-100 text-gray-600";
   return <span className={`${cls} text-xs font-medium px-3 py-1 rounded-full`}>{status}</span>;

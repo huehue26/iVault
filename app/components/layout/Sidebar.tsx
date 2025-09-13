@@ -24,7 +24,7 @@ function Sidebar() {
         if (onClick) onClick(); 
         else if (key) handlePageChange(key); 
       }}
-      className={`nav-link flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors text-base ${activePage === key ? "nav-active" : "text-gray-700 hover:bg-gray-50 hover:text-insurance-blue"}`}
+      className={`nav-link flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${activePage === key ? "nav-active nav-selected" : "text-gray-700 hover:bg-gray-50 hover:text-insurance-blue"}`}
     >
       <i className={`${icon} w-5 text-center`} />
       <span>{label}</span>
@@ -32,7 +32,7 @@ function Sidebar() {
   );
 
   return (
-    <aside className="w-96 bg-white shadow-sm border-r border-gray-200 flex-shrink-0 animate-fade-in" style={{ animationDelay: "80ms" }}>
+    <aside className="w-80 bg-white shadow-sm border-r border-gray-200 flex-shrink-0 animate-fade-in" style={{ animationDelay: "80ms" }}>
       <div className="p-6 h-full flex flex-col">
         <div className="mb-8 animate-slide-up" style={{ animationDelay: "120ms" }}>
           <div className="flex items-center space-x-2 text-success-green mb-1">
@@ -45,15 +45,11 @@ function Sidebar() {
         <nav className="space-y-2">
           {link("policyBankPage", "fa-solid fa-folder-open", "Policy Bank")}
           {link("claimAssistancePage", "fa-solid fa-headset", "Claim Assistance", () => handlePageChange("claimAssistancePage"))}
-          {link(null, "fa-solid fa-users", "Family Coverage", () => {})}
-          {link(null, "fa-solid fa-calendar-check", "Renewals", () => {})}
-          {link(null, "fa-solid fa-file-invoice-dollar", "Premium Tracker", () => {})}
-          {link(null, "fa-solid fa-cog", "Settings", () => {})}
         </nav>
 
         <div className="mt-auto animate-slide-up" style={{ animationDelay: "140ms" }}>
           {isAuthenticated && (
-            <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2 p-3 rounded-lg text-red-600 hover:bg-red-50 transition-colors cursor-pointer">
+            <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2 p-3 rounded-lg text-red-600 hover:bg-red-600 hover:text-white bg-red-50 transition-colors cursor-pointer">
               <i className="fa-solid fa-right-from-bracket" />
               <span className="text-sm font-medium">Log out</span>
             </button>

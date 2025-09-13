@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useInsure } from "../../store/insureStore";
+import FloatingIconsBackground from "../ui/FloatingIconsBackground";
 
 type Mode = "signin" | "signup" | "forgot";
 
@@ -111,8 +112,9 @@ export default function Auth() {
   }, [forgotStep, forgotData.newPassword, forgotData.confirmPassword]);
 
   return (
-    <div className="bg-gray-50 flex justify-center items-center min-h-screen p-4">
-      <div className="w-full max-w-5xl">
+    <div className="flex justify-center items-center min-h-screen p-4 relative">
+      <FloatingIconsBackground />
+      <div className="w-full max-w-5xl relative z-20">
         <div className="mb-6">
           <button 
             onClick={() => setActivePage("homePage")}
@@ -186,7 +188,7 @@ export default function Auth() {
                     <div className="g-recaptcha opacity-60 select-none pointer-events-none">reCAPTCHA placeholder</div>
                   </div>
                 </div>
-                <button type="submit" className="w-full max-w-xs rounded-full bg-blue-600 text-white text-sm font-bold uppercase py-3 tracking-wider hover:bg-blue-700 transition-transform active:scale-95 mt-4">Sign Up</button>
+                <button type="submit" className="w-full max-w-xs rounded-full bg-primary-blue bg-primary-blue-hover text-white text-sm font-bold uppercase py-3 tracking-wider transition-transform active:scale-95 mt-4">Sign Up</button>
               </form>
             </div>
 
@@ -218,7 +220,7 @@ export default function Auth() {
                   </div>
                   {errors.signInPassword && <p className="text-xs text-red-500 mb-4 text-left">{errors.signInPassword}</p>}
                   <button type="button" onClick={()=>setMode("forgot")} className="text-sm text-blue-600 hover:underline mb-6">Forgot your password?</button>
-                  <button type="submit" className="w-full rounded-full bg-blue-600 text-white text-sm font-bold uppercase py-3 tracking-wider hover:bg-blue-700 transition-transform active:scale-95">Sign In</button>
+                  <button type="submit" className="w-full rounded-full bg-primary-blue bg-primary-blue-hover text-white text-sm font-bold uppercase py-3 tracking-wider transition-transform active:scale-95">Sign In</button>
                 </form>
               </div>
             </div>
@@ -267,7 +269,7 @@ export default function Auth() {
                       className={`w-full rounded-full text-white text-sm font-bold uppercase py-3 tracking-wider transition-transform ${
                         !forgotData.email.trim() 
                           ? "bg-gray-400 cursor-not-allowed" 
-                          : "bg-blue-600 hover:bg-blue-700 active:scale-95"
+                          : "bg-primary-blue bg-primary-blue-hover active:scale-95"
                       }`}
                     >
                       Send OTP
@@ -337,7 +339,7 @@ export default function Auth() {
                       className={`w-full rounded-full text-white text-sm font-bold uppercase py-3 tracking-wider transition-transform ${
                         forgotData.otp.length !== 6 
                           ? "bg-gray-400 cursor-not-allowed" 
-                          : "bg-blue-600 hover:bg-blue-700 active:scale-95"
+                          : "bg-primary-blue bg-primary-blue-hover active:scale-95"
                       }`}
                     >
                       Verify
@@ -384,7 +386,7 @@ export default function Auth() {
                       className={`w-full rounded-full text-white text-sm font-bold uppercase py-3 tracking-wider transition-transform ${
                         !forgotData.newPassword.trim() || !forgotData.confirmPassword.trim() || forgotData.newPassword !== forgotData.confirmPassword
                           ? "bg-gray-400 cursor-not-allowed" 
-                          : "bg-blue-600 hover:bg-blue-700 active:scale-95"
+                          : "bg-primary-blue bg-primary-blue-hover active:scale-95"
                       }`}
                     >
                       Reset Password
