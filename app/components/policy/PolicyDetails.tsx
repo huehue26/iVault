@@ -3,6 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { useInsure } from "../../store/insureStore";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 interface GroupMember {
   id: number;
@@ -440,12 +441,12 @@ export default function PolicyDetails() {
         <aside className="col-span-12 lg:col-span-4 bg-white p-6 rounded-2xl shadow-sm h-fit sticky top-28 animate-slide-up" style={{ animationDelay: "120ms" }}>
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-              <img
-                src="/icons/wand-magic-sparkles.gif"
-                alt="Magic"
-                className="w-8 h-8 text-blue-600"
-              />
+            <div className="w-16 h-16 flex items-center justify-center">
+            <DotLottieReact
+              src="https://lottie.host/0a43f76d-5404-465d-85ac-2ae1af2efccb/KL9hBWkl66.lottie"
+              loop
+              autoplay
+            />
             </div>
             <div>
               <h3 className="text-lg font-bold text-gray-800">Genie Analysis</h3>

@@ -14,12 +14,12 @@ function SettingsDropdown({
   if (!isOpen) return null;
   
   return (
-    <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-[999999]" style={{ zIndex: 999999 }}>
+    <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-[999999]" style={{ zIndex: 2 }}>
       <button
         onClick={() => onAction('delete', policyNumber)}
         className="w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
       >
-        <img src="/icons/trash.gif" alt="Delete" className="w-4 h-4 mr-3" />
+        <i className="fa-solid fa-trash pe-4"></i>
         Delete Policy
       </button>
       <button
@@ -33,7 +33,7 @@ function SettingsDropdown({
         onClick={() => onAction('upload', policyNumber)}
         className="w-full flex items-center px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 transition-colors"
       >
-        <img src="/icons/upload.gif" alt="Upload" className="w-4 h-4 mr-3" />
+        <i className="fa-solid fa-upload pe-4"></i>
         Upload Documents
       </button>
     </div>
@@ -207,8 +207,23 @@ export default function PolicyBank() {
           </select>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => setViewMode("grid")} className={`p-3 rounded-lg ${viewMode === "grid" ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-brand-gray-100"} cursor-pointer`}><img src="/icons/th-large.gif" alt="Grid" className="w-5 h-5" /></button>
-          <button onClick={() => setViewMode("list")} className={`p-3 rounded-lg ${viewMode === "list" ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-brand-gray-100"} cursor-pointer`}><img src="/icons/list.gif" alt="List" className="w-5 h-5" /></button>
+          <button 
+            onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")} 
+            className="rounded-lg cursor-pointer transition-all duration-300"
+          >
+            <div className="relative w-10 h-10 flex items-center justify-center">
+              <img src="/icons/grid.gif" className={`w-10 h-10 mix-blend-multiply ${
+                  viewMode === "grid" 
+                    ? "hidden" 
+                    : "block"
+                  }`} />
+              <img src="/icons/list.gif" className={`w-10 h-10 mix-blend-multiply ${
+                  viewMode === "list" 
+                    ? "hidden" 
+                    : "block"
+                }`} />
+              </div>
+          </button>
         </div>
       </section>
 
@@ -218,7 +233,7 @@ export default function PolicyBank() {
         ) : (
           <div id="policy-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredPolicies.map((p, idx) => (
-              <div key={p.policyNumber} onClick={() => { setActivePolicyNumber(p.policyNumber); setActivePage("policyDetailsPage"); }} className="bg-white p-6 rounded-2xl shadow-sm animate-card-enter hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative" style={{ animationDelay: `${idx * 80}ms`, zIndex: 1 }}>
+              <div key={p.policyNumber} onClick={() => { setActivePolicyNumber(p.policyNumber); setActivePage("policyDetailsPage"); }} className="relative group bg-white p-6 rounded-2xl shadow-sm animate-card-enter hover:shadow-lg transition-all duration-300 cursor-pointer" style={{ animationDelay: `${idx * 80}ms`}}>
                 {/* Group icon in top right corner - overlaying outside */}
                 <div className="absolute -top-2 -right-2 rounded-full flex items-center justify-center transition-colors duration-200 shadow-lg border-2 border-white">
                   <img src="/icons/users.gif" alt="Users" className="w-8 h-8 rounded-full" />
@@ -255,7 +270,7 @@ export default function PolicyBank() {
                 <div className="border-t border-brand-gray-200 mt-4 pt-4">
                   <div className={`flex items-center ${p.missingDocuments.length > 0 ? "justify-between" : "justify-end"}`}>
                     <MissingDocuments missingDocuments={p.missingDocuments} />
-                    <div className="relative flex-shrink-0 ml-2 overflow-visible" style={{ zIndex: 999999 }}>
+                    <div className="relative flex-shrink-0 ml-2 overflow-visible">
                       <button 
                         onClick={(e) => handleSettingsClick(e, p.policyNumber)}
                         className="flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
@@ -313,7 +328,7 @@ function PolicyListView({
   const { setActivePolicyNumber, setActivePage } = useInsure();
   const sorted = useMemo(() => [...policies].sort((a, b) => new Date(a.expires).getTime() - new Date(b.expires).getTime()), [policies]);
   const row = (p: { policyNumber: string; type: string; insurer: string; premium: number; coverageAmount: number; expires: string; status: string; iconBg: string; iconColor: string; icon: string; documents: number; missingDocuments: string[] }, idx: number) => (
-    <div key={p.policyNumber} onClick={() => { setActivePolicyNumber(p.policyNumber); setActivePage("policyDetailsPage"); }} className="group grid grid-cols-12 gap-4 items-center px-4 py-4 bg-white rounded-xl shadow-sm border border-gray-100 cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg animate-list-enter relative" style={{ animationDelay: `${idx * 60}ms`, zIndex: 1 }}>
+    <div key={p.policyNumber} onClick={() => { setActivePolicyNumber(p.policyNumber); setActivePage("policyDetailsPage"); }} className="group grid grid-cols-12 gap-4 items-center px-4 py-4 bg-white rounded-xl shadow-sm border border-gray-100 cursor-pointer transition-all hover:shadow-lg hover:-mt-1 transition-all duration-30 hover:shadow-lg animate-list-enter relative" style={{ animationDelay: `${idx * 60}ms` }}>
       {/* Group icon in top right corner - overlaying outside */}
       <div className="absolute -top-2 -right-2 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-200 shadow-lg border-2 border-white">
         <img src="/icons/users.gif" alt="Users" className="w-6 h-6 rounded-full" />
@@ -342,7 +357,7 @@ function PolicyListView({
             <span className="block rounded-full px-3 py-1 text-xs font-semibold bg-amber-100 text-amber-700">Expiring Soon</span>
           )}
         </div>
-        <div className="relative flex-shrink-0 overflow-visible" style={{ zIndex: 999999 }}>
+        <div className="relative flex-shrink-0 overflow-visible">
           <button 
             onClick={(e) => handleSettingsClick(e, p.policyNumber)}
             className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
