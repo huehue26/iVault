@@ -157,7 +157,7 @@ export default function ClaimFilingModal() {
         <div className="p-6 border-b bg-white">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-3">
-              <i className="fa-solid fa-headset text-blue-600 text-2xl"></i>
+              <img src="/icons/headset.gif" alt="Headset" className="w-8 h-8 text-blue-600" />
               <h2 className="text-2xl font-bold text-gray-900">iVault Claim Assistance</h2>
             </div>
             <button onClick={closeClaimFiling} className="text-gray-600 hover:text-gray-800 text-3xl font-light">
@@ -218,8 +218,8 @@ export default function ClaimFilingModal() {
                   onClick={() => updateClaimData({ selectedPolicyId: policy.policyNumber })}
                 >
                   <div className="flex items-center space-x-4">
-                    <div className={`${policy.iconBg} ${policy.iconColor} w-12 h-12 flex items-center justify-center rounded-lg`}>
-                      <i className={`${policy.icon} text-xl`} />
+                    <div className="flex items-center justify-center rounded-lg">
+                      <img src={policy.icon} alt={policy.type} className="w-12 h-12" />
                     </div>
                     <div>
                       <h3 className="font-bold text-gray-800">{policy.type}</h3>
@@ -271,9 +271,7 @@ export default function ClaimFilingModal() {
                   onChange={handleFileInputChange}
                 />
                 <div className="flex flex-col items-center text-gray-700">
-                  <svg className="w-16 h-16 mb-4 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l-3 3m3-3l3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
-                  </svg>
+                  <img src="/icons/upload-cloud.gif" alt="Upload" className="w-20 h-20 mix-blend-multiply" />
                   <p className="font-semibold text-lg text-gray-700">Drag & drop supporting documents</p>
                   <p className="text-gray-700 mt-1">or</p>
                   <button type="button" className="mt-4 text-sm font-semibold text-blue-600 hover:underline">
@@ -288,7 +286,7 @@ export default function ClaimFilingModal() {
                   {claimData.supportingDocs.map((file, index) => (
                     <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded-md border">
                       <div className="flex items-center gap-3 overflow-hidden">
-                        <i className="fa-solid fa-file-pdf text-red-500 text-xl flex-shrink-0"></i>
+                        <img src="/icons/file-uploaded.gif" alt="PDF" className="w-8 h-8 mix-blend-multiply" />
                         <span className="font-medium truncate text-sm text-gray-800">{file.name}</span>
                         <span className="text-gray-600 text-xs font-semibold flex-shrink-0">
                           {(file.size / 1024).toFixed(1)} KB
@@ -381,7 +379,7 @@ export default function ClaimFilingModal() {
                         claimData.supportingDocs.map((file, index) => (
                           <li key={index} className="flex items-center justify-between">
                             <span className="text-gray-700">{file.name}</span>
-                            <i className="fa-solid fa-check-circle text-green-500"></i>
+                            <img src="/icons/check-circle.gif" alt="Check" className="w-5 h-5 text-green-500" />
                           </li>
                         ))
                       ) : (
@@ -402,11 +400,10 @@ export default function ClaimFilingModal() {
         </div>
 
         {/* Navigation */}
-        <div className="p-6 bg-gray-50 border-t flex justify-between items-center">
+        <div className={`${currentStep === 1 ? 'justify-end' : 'justify-between'} p-6 bg-gray-50 border-t flex items-center`}>
           <button
             onClick={prevStep}
-            disabled={currentStep === 1}
-            className="flex items-center space-x-2 px-6 py-2 border border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+            className={`${currentStep === 1 ? 'hidden' : 'visible'} flex items-center space-x-2 px-6 py-2 border border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity`}
           >
             <i className="fa-solid fa-arrow-left"></i>
             <span>Previous</span>

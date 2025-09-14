@@ -168,8 +168,8 @@ export default function PolicyDetails() {
         <div className="col-span-12 lg:col-span-8 space-y-8">
           <div className="bg-white p-6 rounded-2xl shadow-sm flex justify-between items-start animate-slide-up">
             <div className="flex items-start space-x-5">
-              <div className={`w-16 h-16 ${policy.iconBg} rounded-xl flex items-center justify-center`}>
-                <i className={`${policy.icon} text-3xl ${policy.iconColor}`} />
+              <div className={`w-16 h-16 rounded-xl flex items-center justify-center`}>
+                <img src={policy.icon} alt="Clock" className="w-14 h-14" />
               </div>
               <div>
                 <h2 className="text-2xl font-bold text-gray-800">{policy.type}</h2>
@@ -185,7 +185,7 @@ export default function PolicyDetails() {
                 }}
                 title="Download Policy Documents"
               >
-                <i className="fa-solid fa-download text-lg group-hover:animate-bounce"></i>
+                <i className="fa-solid fa-download text-2xl group-hover:animate-bounce"></i>
               </button>
             </div>
           </div>
@@ -226,21 +226,21 @@ export default function PolicyDetails() {
                     <div className="space-y-4">
                       <p className="text-sm font-semibold text-gray-700 uppercase tracking-wider">Core Coverage</p>
                       <div className="p-4 border border-gray-100 rounded-xl flex items-start space-x-4">
-                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0"><i className="fa-solid fa-bed-pulse text-blue-500" /></div>
+                        <div className="rounded-lg flex items-center justify-center flex-shrink-0"><img src="/icons/hospital-doctor.gif" alt="Bed" className="w-11 h-11 text-blue-500" /></div>
                         <div>
                           <h4 className="font-semibold text-gray-800">In-patient Hospitalization</h4>
                           <p className="text-sm text-gray-700">Covers room rent, ICU charges, doctor&apos;s fees, and other related expenses.</p>
                         </div>
                       </div>
                       <div className="p-4 border border-gray-100 rounded-xl flex items-start space-x-4">
-                        <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0"><i className="fa-solid fa-notes-medical text-green-500" /></div>
+                        <div className="rounded-lg flex items-center justify-center flex-shrink-0"><img src="/icons/notes-medical.gif" alt="Medical" className="w-11 h-11 text-green-500" /></div>
                         <div>
                           <h4 className="font-semibold text-gray-800">Pre & Post-Hospitalization</h4>
                           <p className="text-sm text-gray-700">Covers medical expenses for 60 days before and 90 days after hospitalization.</p>
                         </div>
                       </div>
                       <div className="p-4 border border-gray-100 rounded-xl flex items-start space-x-4">
-                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0"><i className="fa-solid fa-clock text-blue-500" /></div>
+                        <div className="rounded-lg flex items-center justify-center flex-shrink-0"><img src="/icons/clock.gif" alt="Clock" className="w-11 h-11 text-blue-500" /></div>
                         <div>
                           <h4 className="font-semibold text-gray-800">Day Care Procedures</h4>
                           <p className="text-sm text-gray-700">Covers medical treatments that do not require 24-hour hospitalization.</p>
@@ -248,7 +248,7 @@ export default function PolicyDetails() {
                       </div>
                       <p className="text-sm font-semibold text-gray-700 uppercase tracking-wider pt-4">Additional Benefits</p>
                       <div className="p-4 border border-gray-100 rounded-xl flex items-start space-x-4">
-                        <div className="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center flex-shrink-0"><i className="fa-solid fa-baby text-pink-500" /></div>
+                        <div className="rounded-lg flex items-center justify-center flex-shrink-0"><img src="/icons/baby.gif" alt="Baby" className="w-11 h-11 text-pink-500" /></div>
                         <div>
                           <h4 className="font-semibold text-gray-800">Maternity and Newborn Care</h4>
                           <p className="text-sm text-gray-700">Coverage for childbirth and newborn baby expenses up to $5,000.</p>
@@ -262,8 +262,8 @@ export default function PolicyDetails() {
                   <div>
                     <div className="flex justify-between items-center mb-4">
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                          <i className="fa-solid fa-users text-blue-600 text-lg"></i>
+                        <div className="rounded-lg flex items-center justify-center">
+                          <img src="/icons/users.gif" alt="Users" className="w-9 h-9" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-700">Group Members</h3>
                       </div>
@@ -300,19 +300,19 @@ export default function PolicyDetails() {
                            <tr>
                              <th scope="col" className="w-1/3 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                <div className="flex items-center space-x-2">
-                                 <i className="fa-solid fa-user text-gray-400"></i>
+                                 {/* <i className="fa-solid fa-user text-gray-400"></i> */}
                                  <span>Name</span>
                                </div>
                              </th>
                              <th scope="col" className="w-1/3 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                <div className="flex items-center space-x-2">
-                                 <i className="fa-solid fa-id-card text-gray-400"></i>
+                                 {/* <i className="fa-solid fa-id-card text-gray-400"></i> */}
                                  <span>Group Member Code</span>
                                </div>
                              </th>
                              <th scope="col" className="w-1/4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                <div className="flex items-center space-x-2">
-                                 <i className="fa-solid fa-heart text-gray-400"></i>
+                                 {/* <i className="fa-solid fa-heart text-gray-400"></i> */}
                                  <span>Relationship</span>
                                </div>
                              </th>
@@ -450,26 +450,23 @@ export default function PolicyDetails() {
         </div>
 
         <aside className="col-span-12 lg:col-span-4 bg-white p-6 rounded-2xl shadow-sm h-fit sticky top-28 animate-slide-up" style={{ animationDelay: "120ms" }}>
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center"><i className="fa-solid fa-wand-magic-sparkles text-2xl text-blue-600" /></div>
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-3">
+            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+              <img
+                src="/icons/wand-magic-sparkles.gif"
+                alt="Magic"
+                className="w-8 h-8 text-blue-600"
+              />
+            </div>
             <div>
               <h3 className="text-lg font-bold text-gray-800">Genie Analysis</h3>
               <p className="text-sm text-gray-700">AI-powered insights for your policy</p>
             </div>
           </div>
+          <div className="text-2xl font-extrabold text-blue-600">85%</div>
+        </div>
           <div className="space-y-5 mb-6">
-            <div className="bg-blue-100 rounded-xl p-4 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-blue-600"><i className="fa-solid fa-wand-magic-sparkles" /></div>
-                <div>
-                  <p className="text-sm font-semibold text-gray-800">Genie Score</p>
-                  <p className="text-xs text-gray-600">Overall policy quality by Genie</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="text-2xl font-extrabold text-blue-600">85%</div>
-              </div>
-            </div>
             <ProgressRow label="Market Score" value={85} color="bg-blue-500" />
             <ProgressRow label="Coverage Quality" value={92} color="bg-green-500" />
             <ProgressRow label="Premium Value" value={78} color="bg-orange-500" />
@@ -482,15 +479,6 @@ export default function PolicyDetails() {
             </div>
           </div>
           <div className="mt-8 space-y-5">
-            <h4 className="font-bold mb-3 text-gray-800">Policy Documents</h4>
-            <div className={`border-2 border-dashed rounded-xl p-6 text-center dropzone ${isDropOver ? "border-blue-500 bg-blue-50 drag-over" : "border-gray-300"}`} onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop}>
-              <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3 dropzone-icon"><i className="fa-solid fa-cloud-arrow-up text-xl text-gray-600" /></div>
-              <p className="text-sm font-semibold text-gray-800">Upload Documents</p>
-              <p className="text-xs text-gray-600 mb-4">Drag & drop or click to upload</p>
-              <input ref={uploadInputRef} type="file" multiple className="hidden" onChange={(e) => onFilesSelected(e.target.files)} />
-              <button onClick={handleUploadClick} className="w-full py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors animate-shimmer">Upload File</button>
-            </div>
-
             <div className="bg-white border border-gray-200 rounded-xl p-4">
               <h5 className="font-semibold text-gray-800 mb-2">Missing Documents</h5>
               {missingStatus.length === 0 ? (
@@ -500,7 +488,7 @@ export default function PolicyDetails() {
                   {missingStatus.map(item => (
                     <li key={item.name} className="flex items-center justify-between px-3 py-2 rounded-lg border bg-orange-50 border-orange-200">
                       <div className="flex items-center gap-2">
-                        <i className="fa-solid fa-circle-exclamation text-orange-600" />
+                        <img src="/icons/circle-exclamation.gif" alt="Alert" className="w-6 h-6 text-orange-600 mix-blend-multiply" />
                         <span className="text-sm font-medium text-gray-800">{item.name}</span>
                       </div>
                       <button onClick={handleUploadClick} title="Upload" aria-label="Upload missing document" className="text-orange-700 hover:text-orange-800 bg-white border border-orange-300 rounded-full w-8 h-8 flex items-center justify-center">
@@ -521,7 +509,7 @@ export default function PolicyDetails() {
                   {uploadedDocs.map((d, i) => (
                     <li key={`${d.name}-${i}`} className="py-2 flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-gray-100 rounded-md flex items-center justify-center text-gray-700 icon-hover-bounce"><i className={`fa-solid ${d.mime?.includes("pdf") ? "fa-file-pdf" : d.mime?.startsWith("image/") ? "fa-file-image" : "fa-file"}`} /></div>
+                        <div className="rounded-md flex items-center justify-center text-gray-700 icon-hover-bounce"><img src={d.mime?.includes("pdf") ? "/icons/file-uploaded.gif" : d.mime?.startsWith("image/") ? "/icons/file-uploaded.gif" : "/icons/file.gif"} alt="File" className="w-7 h-7 mix-blend-multiply" /></div>
                         <div>
                           <p className="text-sm font-medium text-gray-800">{d.name}</p>
                           <p className="text-xs text-gray-700">{d.sizeKb} KB</p>
@@ -551,7 +539,7 @@ export default function PolicyDetails() {
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[80vh] overflow-hidden" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-center p-3 border-b">
               <h4 className="font-semibold text-gray-800">Document Preview</h4>
-              <button onClick={closePreview} className="text-gray-700 hover:text-gray-700"><i className="fa-solid fa-xmark" /></button>
+              <button onClick={closePreview} className="text-gray-700 hover:text-gray-700"><img src="/icons/xmark.gif" alt="Close" className="w-5 h-5" /></button>
             </div>
             <div className="p-0 h-[70vh] overflow-auto">
               {previewMime?.startsWith("image/") ? (

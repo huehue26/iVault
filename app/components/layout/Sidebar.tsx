@@ -16,7 +16,7 @@ function Sidebar() {
     logout();
   }, [logout]);
 
-  const link = (key: PageKey | null, icon: string, label: string, onClick?: () => void) => (
+  const link = (key: PageKey | null, iconSrc: string, label: string, onClick?: () => void) => (
     <a
       href="#"
       onClick={(e) => { 
@@ -26,7 +26,7 @@ function Sidebar() {
       }}
       className={`nav-link flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${activePage === key ? "nav-active nav-selected" : "text-gray-700 hover:bg-gray-50 hover:text-insurance-blue"}`}
     >
-      <i className={`${icon} w-5 text-center`} />
+      <img src={iconSrc} alt={label} className="w-7 h-7 text-center mix-blend-multiply" />
       <span>{label}</span>
     </a>
   );
@@ -36,21 +36,21 @@ function Sidebar() {
       <div className="p-6 h-full flex flex-col">
         <div className="mb-8 animate-slide-up" style={{ animationDelay: "120ms" }}>
           <div className="flex items-center space-x-2 text-success-green mb-1">
-            <i className="fa-regular fa-sun" />
+            <img src="/icons/sun.gif" alt="Sun" className="w-6 h-6" />
             <span className="font-medium text-sm">Good afternoon, Sarah!</span>
           </div>
           <p className="text-sm text-gray-700">Your policies are 95% up to date</p>
         </div>
 
         <nav className="space-y-2">
-          {link("policyBankPage", "fa-solid fa-folder-open", "Policy Bank")}
-          {link("claimAssistancePage", "fa-solid fa-headset", "Claim Assistance", () => handlePageChange("claimAssistancePage"))}
+          {link("policyBankPage", "/icons/folder.gif", "Policy Bank")}
+          {link("claimAssistancePage", "/icons/headset.gif", "Claim Assistance", () => handlePageChange("claimAssistancePage"))}
         </nav>
 
         <div className="mt-auto animate-slide-up" style={{ animationDelay: "140ms" }}>
           {isAuthenticated && (
             <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2 p-3 rounded-lg text-red-600 hover:bg-red-600 hover:text-white bg-red-50 transition-colors cursor-pointer">
-              <i className="fa-solid fa-right-from-bracket" />
+              <img src="/icons/logout.gif" alt="Logout" className="w- h-7 mix-blend-multiply" />
               <span className="text-sm font-medium">Log out</span>
             </button>
           )}

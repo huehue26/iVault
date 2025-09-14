@@ -129,6 +129,7 @@ export default function PolicyOnboardingModal() {
       policyNumber: `${policyData.policyType?.substring(0, 2).toUpperCase()}-${Date.now()}`,
       premium: Math.floor(Math.random() * 500) + 50, // Random premium for demo
       expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      missingDocuments: [],
       coverageAmount: Math.floor(Math.random() * 100000) + 10000, // Random coverage amount for demo
       documents: 1 + Object.keys(policyData.additionalDocs).length,
       status: "Active" as const,
@@ -221,14 +222,14 @@ export default function PolicyOnboardingModal() {
 
   const getPolicyIcon = (type: string) => {
     const icons: Record<string, string> = {
-      Health: "fa-solid fa-heart-pulse",
-      Auto: "fa-solid fa-car",
-      Home: "fa-solid fa-home",
-      Life: "fa-solid fa-user-shield",
-      Travel: "fa-solid fa-plane",
-      Other: "fa-solid fa-file-invoice"
+      Health: "/icons/health-insurance.gif",
+      Auto: "/icons/auto-insurance.gif",
+      Home: "/icons/home-insurance.gif",
+      Life: "/icons/life-insurance.gif",
+      Travel: "/icons/travel-insurance.gif",
+      Other: "/icons/file-invoice.gif"
     };
-    return icons[type] || "fa-solid fa-file-invoice";
+    return icons[type] || "/icons/file-invoice.gif";
   };
 
   const getPolicyIconBg = (type: string) => {
@@ -277,7 +278,7 @@ export default function PolicyOnboardingModal() {
         <div className="p-6 border-b bg-white">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-3">
-              <i className="fa-solid fa-shield-halved text-blue-600 text-2xl"></i>
+              <img src="/icons/shield.gif" alt="Shield" className="w-8 h-8 text-blue-600" />
               <h2 className="text-2xl font-bold text-gray-900">iVault Policy Onboarding</h2>
             </div>
             <button onClick={closePolicyOnboarding} className="text-gray-600 hover:text-gray-600 text-3xl font-light">
@@ -346,9 +347,7 @@ export default function PolicyOnboardingModal() {
                   onChange={handleFileInputChange}
                 />
                 <div className="flex flex-col items-center text-gray-700">
-                  <svg className="w-16 h-16 mb-4 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l-3 3m3-3l3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
-                  </svg>
+                  <img src="/icons/upload-cloud.gif" alt="Upload" className="w-20 h-20 mix-blend-multiply" />
                   <p className="font-semibold text-lg text-gray-700">Drag & drop your policy file</p>
                   <p className="text-gray-700 mt-1">or</p>
                   <button type="button" className="mt-4 text-sm font-semibold text-blue-600 hover:underline">
@@ -359,7 +358,7 @@ export default function PolicyOnboardingModal() {
               {policyData.policyFile && (
                 <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                   <div className="flex items-center gap-3">
-                    <i className="fa-solid fa-file-pdf text-red-500 text-xl"></i>
+                    <img src="/icons/file-uploaded.gif" alt="PDF" className="w-8 h-8 text-red-500 mix-blend-multiply" />
                     <span className="font-medium text-green-800">{policyData.policyFile.name}</span>
                     <span className="text-green-600 text-xs ml-auto font-semibold">
                       {(policyData.policyFile.size / 1024).toFixed(1)} KB
@@ -383,19 +382,19 @@ export default function PolicyOnboardingModal() {
                   }`}
                   onClick={() => updatePolicyData({ policyType: type })}
                 >
-                  <div className={`w-10 h-10 mx-auto mb-2 ${
+                  <div className={`w-12 h-12 mx-auto mb-2 ${
                     type === 'Health' ? 'text-red-500' :
                     type === 'Auto' ? 'text-blue-500' :
                     type === 'Home' ? 'text-green-500' :
                     type === 'Life' ? 'text-blue-500' :
                     type === 'Travel' ? 'text-yellow-500' : 'text-gray-700'
                   }`}>
-                    {type === 'Health' && <i className="fa-solid fa-heart-pulse text-2xl"></i>}
-                    {type === 'Auto' && <i className="fa-solid fa-car text-2xl"></i>}
-                    {type === 'Home' && <i className="fa-solid fa-home text-2xl"></i>}
-                    {type === 'Life' && <i className="fa-solid fa-user-shield text-2xl"></i>}
-                    {type === 'Travel' && <i className="fa-solid fa-plane text-2xl"></i>}
-                    {type === 'Other' && <i className="fa-solid fa-file-invoice text-2xl"></i>}
+                    {type === 'Health' && <img src="/icons/health-insurance.gif" alt="Health" className="w-12 h-12 mix-blend-multiply" />}
+                    {type === 'Auto' && <img src="/icons/auto-insurance.gif" alt="Auto" className="w-12 h-12 mix-blend-multiply" />}
+                    {type === 'Home' && <img src="/icons/home-insurance.gif" alt="Home" className="w-12 h-12 mix-blend-multiply" />}
+                    {type === 'Life' && <img src="/icons/life-insurance.gif" alt="Life" className="w-12 h-12 mix-blend-multiply" />}
+                    {type === 'Travel' && <img src="/icons/travel-insurance.gif" alt="Travel" className="w-12 h-12 mix-blend-multiply" />}
+                    {type === 'Other' && <img src="/icons/file-invoice.gif" alt="Other" className="w-12 h-12 mix-blend-multiply" />}
                   </div>
                   <p className="font-semibold text-gray-700">{type}</p>
                 </div>
@@ -475,7 +474,7 @@ export default function PolicyOnboardingModal() {
                       <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <i className="fa-solid fa-file-pdf text-red-500 text-xl"></i>
+                            <img src="/icons/file-pdf.gif" alt="PDF" className="w-6 h-6 text-red-500" />
                             <span className="font-medium text-green-800">{policyData.additionalDocs[doc.key].name}</span>
                             <span className="text-green-600 text-xs font-semibold">
                               {(policyData.additionalDocs[doc.key].size / 1024).toFixed(1)} KB
@@ -522,9 +521,7 @@ export default function PolicyOnboardingModal() {
                         }}
                       >
                         <div className="flex flex-col items-center text-gray-700">
-                          <svg className="w-12 h-12 mb-3 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l-3 3m3-3l3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
-                          </svg>
+                          <img src="/icons/upload-cloud.gif" alt="Upload" className="w-20 h-20 mix-blend-multiply" />
                           <p className="font-semibold text-gray-700">Drag & drop {doc.name.toLowerCase()}</p>
                           <p className="text-gray-700 mt-1">or</p>
                           <button type="button" className="mt-2 text-sm font-semibold text-blue-600 hover:underline">
@@ -613,14 +610,14 @@ export default function PolicyOnboardingModal() {
                     <ul className="space-y-2 pt-4">
                       <li className="flex items-center justify-between">
                         <span className="text-gray-700">Main Policy Document</span>
-                        <i className="fa-solid fa-check-circle text-green-500"></i>
+                        <img src="/icons/check-circle.gif" alt="Check" className="w-8 h-8 text-green-500" />
                       </li>
                       {Object.entries(policyData.additionalDocs).map(([key]) => {
                         const docName = requiredDocs[policyData.policyType || '']?.find(d => d.key === key)?.name || key;
                         return (
                           <li key={key} className="flex items-center justify-between">
                             <span className="text-gray-700">{docName}</span>
-                            <i className="fa-solid fa-check-circle text-green-500"></i>
+                            <img src="/icons/check-circle.gif" alt="Check" className="w-8 h-8 text-green-500" />
                           </li>
                         );
                       })}
@@ -639,11 +636,10 @@ export default function PolicyOnboardingModal() {
         </div>
 
         {/* Navigation */}
-        <div className="p-6 bg-gray-50 border-t flex justify-between items-center">
+        <div className={`${currentStep === 1 ? 'justify-end' : 'justify-between'} p-6 bg-gray-50 border-t flex items-center`}>
           <button
             onClick={prevStep}
-            disabled={currentStep === 1}
-            className="flex items-center space-x-2 px-6 py-2 border border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+            className={`${currentStep === 1 ? 'hidden' : 'visible'} flex items-center space-x-2 px-6 py-2 border border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity`}
           >
             <i className="fa-solid fa-arrow-left"></i>
             <span>Previous</span>

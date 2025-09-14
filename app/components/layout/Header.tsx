@@ -20,7 +20,7 @@ function Header() {
             onClick={handleBackToHome}
           >
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-insurance-light to-insurance-blue flex items-center justify-center">
-              <i className="fa-solid fa-shield-halved text-white text-lg" />
+              <img src="/icons/shield.gif" alt="Shield" className="w-6 h-6" />
             </div>
             <div>
               <h1 className="text-xl font-bold text-insurance-blue">InsureVault</h1>
@@ -29,11 +29,6 @@ function Header() {
           </div>
 
           <div className="flex items-center space-x-6">
-            <button className="relative p-2 text-gray-600 hover:text-insurance-blue transition-colors hover:scale-105 duration-200">
-              <i className="fa-regular fa-bell text-xl" />
-              <span className="absolute top-0 right-0 bg-accent-orange text-white text-xs rounded-full w-4 h-4 flex items-center justify-center text-[10px]">3</span>
-            </button>
-
             <div className="flex items-center space-x-3 cursor-pointer hover:opacity-90 transition-opacity">
               <Image src="https://placehold.co/32x32/E2E8F0/475569?text=S" alt="Profile" width={32} height={32} className="w-8 h-8 rounded-full" />
               <div className="hidden md:block">

@@ -66,12 +66,12 @@ export default function ClaimDetails() {
               return (
                 <div key={idx} className={`${isUser ? "user-message flex justify-end" : "agent-message flex justify-start"} animate-slide-in-up`}>
                   <div className="flex items-start space-x-3 max-w-md">
-                    {!isUser && <Image src={avatar} alt="Avatar" width={32} height={32} className="w-8 h-8 rounded-full flex-shrink-0" />}
+                    {!isUser && <Image src={avatar} alt="Avatar" width={32} height={32} className="w-10 h-10rounded-full flex-shrink-0" />}
                     <div>
                       <div className={`chat-bubble p-4 rounded-2xl shadow-sm ${bubbleClass}`}><p className="text-sm">{u.message}</p></div>
                       <p className="text-xs text-gray-600 mt-1.5 px-2">{name}, {u.timestamp}</p>
                     </div>
-                    {isUser && <Image src={avatar} alt="Avatar" width={32} height={32} className="w-8 h-8 rounded-full flex-shrink-0" />}
+                    {isUser && <Image src={avatar} alt="Avatar" width={32} height={32} className="w-10 h-10rounded-full flex-shrink-0" />}
                   </div>
                 </div>
               );
@@ -128,8 +128,8 @@ function MessageInput({ disabled, onSend }: { disabled: boolean; onSend: (text: 
           onKeyPress={handleKeyPress}
           className="w-full pl-4 pr-12 py-3 rounded-xl bg-white border-2 border-gray-300 focus:ring-2 focus:ring-insurance-blue focus:border-insurance-blue text-sm text-gray-900 disabled:bg-gray-100 disabled:text-gray-500 shadow-sm" 
         />
-        <button onClick={() => { if (inputRef) { onSend(inputRef.value); inputRef.value = ""; } }} disabled={disabled} className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-insurance-blue hover:bg-insurance-blue/90 text-white rounded-lg flex items-center justify-center transition-colors disabled:bg-gray-400 shadow-sm">
-          <i className="fa-solid fa-paper-plane" />
+        <button onClick={() => { if (inputRef) { onSend(inputRef.value); inputRef.value = ""; } }} disabled={disabled} className={`${disabled ? "hidden" : "block"} absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-lg flex items-center justify-center transition-colors shadow-sm`}>
+        <img src="/icons/send.gif" alt="Send Message" className="w-8 h-8 text-center" />
         </button>
       </div>
     </div>

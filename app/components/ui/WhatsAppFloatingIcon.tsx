@@ -19,7 +19,7 @@ export default function WhatsAppFloatingIcon() {
         className="w-14 h-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group"
         aria-label="Contact us on WhatsApp"
       >
-        <i className="fa-brands fa-whatsapp text-2xl group-hover:scale-110 transition-transform duration-300" />
+        <img src="/icons/whatsapp.gif" alt="WhatsApp" className="w-8 h-8 group-hover:scale-110 transition-transform duration-300" />
       </button>
       
       {/* Optional tooltip */}
