@@ -1,14 +1,26 @@
 "use client";
 
 import { useInsure } from "../../store/insureStore";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 // Type declarations for external libraries
 declare global {
   interface Window {
-    gsap: any;
-    ScrollTrigger: any;
-    anime: any;
+    gsap: {
+      registerPlugin: (plugin: unknown) => void;
+      fromTo: (targets: string | HTMLElement, fromVars: object, toVars: object) => void;
+      to: (targets: string | HTMLElement, vars: object) => void;
+    };
+    ScrollTrigger: {
+      trigger: string;
+      start: string;
+      end: string;
+      onEnter: () => void;
+      onLeaveBack: () => void;
+    };
+    anime: {
+      (params: object): void;
+    };
   }
 }
 
@@ -18,14 +30,14 @@ export default function Home() {
   const [displayedText, setDisplayedText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const messages = [
+  const messages = useMemo(() => [
     "One secure place for all your policies.",
     "Smarter insights for better decisions.",
     "Hassle-free claims processing.",
     "AI-powered policy analysis.",
     "Save up to 40% on premiums.",
     "24/7 claim assistance support."
-  ];
+  ], []);
 
   const handleLoginClick = () => {
     showLoginPage();
@@ -157,7 +169,7 @@ export default function Home() {
         }
         ::-webkit-scrollbar { display: none; }
         html, body { -ms-overflow-style: none; scrollbar-width: none; }
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: var(--font-inter), sans-serif; }
         .glass-morphism {
           background: rgba(255, 255, 255, 0.95);
           backdrop-filter: blur(20px);
@@ -426,7 +438,7 @@ export default function Home() {
           <div className="container mx-auto">
           <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-neutral-800 to-neutral-600 bg-clip-text text-transparent">Uncover Your Hidden Risks</h2>
-              <p className="text-lg md:text-xl text-neutral-600 max-w-3xl mx-auto font-medium">Life is unpredictable. Your insurance coverage shouldn't be. Here are some common gaps people discover too late.</p>
+              <p className="text-lg md:text-xl text-neutral-600 max-w-3xl mx-auto font-medium">Life is unpredictable. Your insurance coverage shouldn&apos;t be. Here are some common gaps people discover too late.</p>
           </div>
             
             <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
@@ -446,7 +458,7 @@ export default function Home() {
                   <i className="fa-solid fa-house-damage text-5xl text-amber-500"></i>
               </div>
                 <h3 className="text-2xl font-bold text-neutral-800 mb-3">When Disaster Strikes Home</h3>
-                <p className="text-neutral-600 flex-grow">Standard home insurance doesn't cover everything. Floods, earthquakes, and even simple water damage from a burst pipe can cost tens of thousands in unexpected repairs.</p>
+                <p className="text-neutral-600 flex-grow">Standard home insurance doesn&apos;t cover everything. Floods, earthquakes, and even simple water damage from a burst pipe can cost tens of thousands in unexpected repairs.</p>
                 <button className="mt-6 bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-all duration-300 font-semibold w-full">Review Home & Auto Coverage</button>
             </div>
               
@@ -455,7 +467,7 @@ export default function Home() {
                 <div className="mb-4">
                   <i className="fa-solid fa-shield-heart text-5xl text-green-500"></i>
                 </div>
-                <h3 className="text-2xl font-bold text-neutral-800 mb-3">Protecting Your Family's Future</h3>
+                <h3 className="text-2xl font-bold text-neutral-800 mb-3">Protecting Your Family&apos;s Future</h3>
                 <p className="text-neutral-600 flex-grow">Is your family prepared for the loss of your income? Without adequate life or disability insurance, loved ones could face financial instability within a few months.</p>
                 <button className="mt-6 bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-all duration-300 font-semibold w-full">Assess My Life Insurance</button>
             </div>
@@ -565,7 +577,7 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                <p className="text-neutral-700 leading-relaxed italic">"iVault saved me $800 on my insurance premiums. The AI analysis found gaps I never knew existed. The platform is incredibly intuitive and the insights are spot-on."</p>
+                <p className="text-neutral-700 leading-relaxed italic">&quot;iVault saved me $800 on my insurance premiums. The AI analysis found gaps I never knew existed. The platform is incredibly intuitive and the insights are spot-on.&quot;</p>
                 <div className="mt-4 flex items-center text-sm text-neutral-500">
                   <i className="fa-solid fa-calendar-check mr-2"></i>
                   Verified Customer • 3 months ago
@@ -587,7 +599,7 @@ export default function Home() {
               </div>
             </div>
               </div>
-                <p className="text-neutral-700 leading-relaxed italic">"Finally, all my policies in one place. The insights dashboard is incredibly helpful for planning. The claim assistance feature saved me hours of paperwork."</p>
+                <p className="text-neutral-700 leading-relaxed italic">&quot;Finally, all my policies in one place. The insights dashboard is incredibly helpful for planning. The claim assistance feature saved me hours of paperwork.&quot;</p>
                 <div className="mt-4 flex items-center text-sm text-neutral-500">
                   <i className="fa-solid fa-calendar-check mr-2"></i>
                   Verified Customer • 6 months ago
@@ -609,7 +621,7 @@ export default function Home() {
             </div>
               </div>
             </div>
-                <p className="text-neutral-700 leading-relaxed italic">"The claim assistance feature made filing a claim so much easier. Highly recommend iVault! The security features give me complete peace of mind."</p>
+                <p className="text-neutral-700 leading-relaxed italic">&quot;The claim assistance feature made filing a claim so much easier. Highly recommend iVault! The security features give me complete peace of mind.&quot;</p>
                 <div className="mt-4 flex items-center text-sm text-neutral-500">
                   <i className="fa-solid fa-calendar-check mr-2"></i>
                   Verified Customer • 1 month ago

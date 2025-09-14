@@ -5,12 +5,10 @@ import { useInsure, formatDate } from "../../store/insureStore";
 function SettingsDropdown({ 
   isOpen, 
   policyNumber, 
-  onClose, 
   onAction 
 }: { 
   isOpen: boolean; 
   policyNumber: string; 
-  onClose: () => void; 
   onAction: (action: string, policyNumber: string) => void; 
 }) {
   if (!isOpen) return null;
@@ -268,7 +266,6 @@ export default function PolicyBank() {
                       <SettingsDropdown 
                         isOpen={settingsMenuOpen === p.policyNumber}
                         policyNumber={p.policyNumber}
-                        onClose={() => setSettingsMenuOpen(null)}
                         onAction={handlePolicyAction}
                       />
                     </div>
@@ -294,7 +291,6 @@ export default function PolicyBank() {
         <PolicyListView 
           policies={filteredPolicies} 
           settingsMenuOpen={settingsMenuOpen}
-          setSettingsMenuOpen={setSettingsMenuOpen}
           handleSettingsClick={handleSettingsClick}
           handlePolicyAction={handlePolicyAction}
         />
@@ -306,13 +302,11 @@ export default function PolicyBank() {
 function PolicyListView({ 
   policies, 
   settingsMenuOpen, 
-  setSettingsMenuOpen,
   handleSettingsClick, 
   handlePolicyAction
 }: { 
   policies: Array<{ policyNumber: string; type: string; insurer: string; premium: number; coverageAmount: number; expires: string; status: string; iconBg: string; iconColor: string; icon: string; documents: number; missingDocuments: string[] }>;
   settingsMenuOpen: string | null;
-  setSettingsMenuOpen: (value: string | null) => void;
   handleSettingsClick: (e: React.MouseEvent, policyNumber: string) => void;
   handlePolicyAction: (action: string, policyNumber: string) => void;
 }) {
@@ -359,7 +353,6 @@ function PolicyListView({
           <SettingsDropdown 
             isOpen={settingsMenuOpen === p.policyNumber}
             policyNumber={p.policyNumber}
-            onClose={() => setSettingsMenuOpen(null)}
             onAction={handlePolicyAction}
           />
         </div>

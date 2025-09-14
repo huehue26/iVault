@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState, useCallback } from "react";
+import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { useInsure } from "../../store/insureStore";
 
@@ -34,11 +34,9 @@ export default function PolicyDetails() {
     { name: "Policy_Document.pdf", sizeKb: 128, url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", mime: "application/pdf" },
     { name: "Vehicle_Photo.jpg", sizeKb: 256, url: "https://placehold.co/1024x768?text=Vehicle+Photo", mime: "image/jpeg" },
   ]);
-  const [missingDocs, setMissingDocs] = useState<string[]>(["Policy Document", "Photo ID", "Address Proof"]);
+  const [missingDocs] = useState<string[]>(["Policy Document", "Photo ID", "Address Proof"]);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [previewMime, setPreviewMime] = useState<string | undefined>(undefined);
-  const [isDropOver, setIsDropOver] = useState(false);
-  
   // Tab management state
   const [activeTab, setActiveTab] = useState<'features' | 'groups'>('features');
   
@@ -60,10 +58,6 @@ export default function PolicyDetails() {
     'Other Dependent'
   ];
   
-  const onDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => { e.preventDefault(); setIsDropOver(true); }, []);
-  const onDragLeave = useCallback((e: React.DragEvent<HTMLDivElement>) => { e.preventDefault(); setIsDropOver(false); }, []);
-  const onDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => { e.preventDefault(); setIsDropOver(false); const files = e.dataTransfer.files; onFilesSelected(files); }, []);
-  
   const missingStatus = useMemo(() => {
     return missingDocs
       .map(req => ({ name: req, satisfied: uploadedDocs.some(u => u.name.toLowerCase().includes(req.toLowerCase().split(" ")[0])) }))
@@ -71,12 +65,6 @@ export default function PolicyDetails() {
   }, [missingDocs, uploadedDocs]);
 
   function handleUploadClick() { uploadInputRef.current?.click(); }
-  function onFilesSelected(files: FileList | null) {
-    if (!files) return;
-    const newItems = Array.from(files).map(f => ({ name: f.name, sizeKb: Math.max(1, Math.round(f.size / 1024)), url: URL.createObjectURL(f), mime: f.type }));
-    setUploadedDocs(prev => [...prev, ...newItems]);
-    setMissingDocs(prev => prev.filter(req => !newItems.some(n => n.name.toLowerCase().includes(req.split(" ")[0].toLowerCase()))));
-  }
   function openPreview(url?: string, mime?: string) { if (!url) return; setPreviewUrl(url); setPreviewMime(mime); }
   function closePreview() { setPreviewUrl(null); setPreviewMime(undefined); }
 
