@@ -449,7 +449,7 @@ export default function PolicyDetails() {
             />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-gray-800">Genie Analysis</h3>
+              <h3 className="text-lg font-bold text-gray-800">Genie Insights</h3>
               <p className="text-sm text-gray-700">AI-powered insights for your policy</p>
             </div>
           </div>

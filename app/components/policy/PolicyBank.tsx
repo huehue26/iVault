@@ -49,21 +49,21 @@ function MissingDocuments({
   if (missingDocuments.length === 0) return null;
   
   return (
-    <div className="flex items-center gap-2 flex-1 min-w-0">
-      <span className="flex items-center gap-1">
-        <img src="/icons/exclamation-triangle.gif" alt="Warning" className="w-6 h-6 text-orange-500 text-sm flex-shrink-0" />
-        <span className="text-gray-700 text-sm">Missing Documents: </span>
+    <div className="flex items-center gap-2 flex-1 min-w-0 max-w-full">
+      <span className="flex items-center gap-1 flex-shrink-0">
+        <img src="/icons/exclamation-triangle.gif" alt="Warning" className="w-6 h-6 text-orange-500 flex-shrink-0" />
+        <span className="text-gray-700 text-sm whitespace-nowrap">Missing Documents:</span>
       </span>
-      <div className="flex flex-wrap gap-1 overflow-hidden">
+      <div className="flex gap-1 min-w-0 flex-1">
         {missingDocuments.slice(0, 1).map((doc, docIdx) => (
-          <span key={docIdx} className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-orange-100 text-orange-800 border border-orange-200 whitespace-nowrap">
-            <i className="fa-solid fa-circle-exclamation text-orange-600 mr-1" />
-            {doc}
+          <span key={docIdx} className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-orange-100 text-orange-800 border border-orange-200 truncate max-w-[180px]" title={doc} >
+            <i className="fa-solid fa-circle-exclamation text-orange-600 mr-1 flex-shrink-0" />
+            <span className="truncate">{doc}</span>
           </span>
         ))}
         {missingDocuments.length > 1 && (
-          <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-orange-100 text-orange-800 border border-orange-200">
-            +{missingDocuments.length - 1} more
+          <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-orange-100 text-orange-800 border border-orange-200 flex-shrink-0">
+            +{missingDocuments.length - 1}
           </span>
         )}
       </div>
@@ -231,49 +231,49 @@ export default function PolicyBank() {
         filteredPolicies.length === 0 ? (
           <EmptyDropZone isDragOver={isDragOver} onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop} onClickCta={() => openPolicyOnboarding()} />
         ) : (
-          <div id="policy-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div id="policy-grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {filteredPolicies.map((p, idx) => (
-              <div key={p.policyNumber} onClick={() => { setActivePolicyNumber(p.policyNumber); setActivePage("policyDetailsPage"); }} className="relative group bg-white p-6 rounded-2xl shadow-sm animate-card-enter hover:shadow-lg transition-all duration-300 cursor-pointer" style={{ animationDelay: `${idx * 80}ms`}}>
+              <div key={p.policyNumber} onClick={() => { setActivePolicyNumber(p.policyNumber); setActivePage("policyDetailsPage"); }} className="relative group bg-white p-4 md:p-6 rounded-2xl shadow-sm animate-card-enter hover:shadow-lg transition-all duration-300 cursor-pointer min-h-[280px] flex flex-col" style={{ animationDelay: `${idx * 80}ms`}}>
                 {/* Group icon in top right corner - overlaying outside */}
-                <div className="absolute -top-2 -right-2 rounded-full flex items-center justify-center transition-colors duration-200 shadow-lg border-2 border-white">
-                  <img src="/icons/users.gif" alt="Users" className="w-8 h-8 rounded-full" />
+                <div className="bg-blue-500 absolute w-9 h-9 -top-2 -right-2 rounded-full flex items-center justify-center transition-colors duration-200 shadow-lg border-2">
+                  <i className="fa-solid fa-users rounded-full"></i>
                 </div>
                 
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex items-center justify-center rounded-lg">
-                    <img src={p.icon} alt={p.type} className="w-16 h-16" />
+                    <img src={p.icon} alt={p.type} className="w-12 h-12 sm:w-16 sm:h-16" />
                   </div>
                   <div className="text-right">
                     <div className="mb-2">
                       {p.status === "Active" && (
-                        <span className="inline-block rounded-full px-3 py-1 text-xs font-semibold bg-green-100 text-green-700">Active</span>
+                        <span className="inline-block rounded-full px-2 py-1 text-xs font-semibold bg-green-100 text-green-700">Active</span>
                       )}
                       {p.status === "Expiring Soon" && (
-                        <span className="inline-block rounded-full px-3 py-1 text-xs font-semibold bg-brand-orange-light text-brand-orange">Expiring Soon</span>
+                        <span className="inline-block rounded-full px-2 py-1 text-xs font-semibold bg-brand-orange-light text-brand-orange">Expiring Soon</span>
                       )}
                     </div>
                     <div>
                       <p className="text-xs text-gray-600 font-medium">Coverage</p>
-                      <p className="text-lg font-bold text-brand-gray-600">${p.coverageAmount || '0'}</p>
+                      <p className="text-sm sm:text-lg font-bold text-brand-gray-600">${p.coverageAmount || '0'}</p>
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-bold text-lg text-brand-gray-600">{p.type}</h3>
+                  <h3 className="font-bold text-base sm:text-lg text-brand-gray-600 truncate">{p.type}</h3>
                 </div>
-                <p className="text-sm text-gray-700 mb-4">{p.insurer}</p>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between"><span className="text-gray-700">Policy Number:</span><span className="font-medium text-gray-800">{p.policyNumber}</span></div>
-                  <div className="flex justify-between"><span className="text-gray-700">Premium:</span><span className="font-medium text-gray-800">${p.premium}/month</span></div>
+                <p className="text-sm text-gray-700 mb-4 truncate">{p.insurer}</p>
+                <div className="space-y-2 text-sm flex-grow">
+                  <div className="flex justify-between"><span className="text-gray-700">Policy:</span><span className="font-medium text-gray-800 truncate ml-2">{p.policyNumber}</span></div>
+                  <div className="flex justify-between"><span className="text-gray-700">Premium:</span><span className="font-medium text-gray-800">${p.premium}/mo</span></div>
                   <div className="flex justify-between"><span className="text-gray-700">Expires:</span><span className={`font-medium ${p.status === "Expiring Soon" ? "text-red-500" : "text-gray-800"}`}>{formatDate(p.expires)}</span></div>
                 </div>
                 <div className="border-t border-brand-gray-200 mt-4 pt-4">
                   <div className={`flex items-center ${p.missingDocuments.length > 0 ? "justify-between" : "justify-end"}`}>
                     <MissingDocuments missingDocuments={p.missingDocuments} />
-                    <div className="relative flex-shrink-0 ml-2 overflow-visible">
+                    <div className="relative flex-shrink-0 overflow-visible">
                       <button 
                         onClick={(e) => handleSettingsClick(e, p.policyNumber)}
-                        className="flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+                        className="flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors w-8 h-8"
                         title="Settings"
                       >
                         <img src="/icons/gear.gif" alt="Settings" className="w-6 h-6 text-gray-600" />
@@ -288,17 +288,17 @@ export default function PolicyBank() {
                 </div>
               </div>
             ))}
-            <div id="add-policy-card" onClick={() => openPolicyOnboarding()} className="border-2 border-dashed border-brand-gray-200 rounded-2xl flex flex-col items-center justify-center p-6 text-center animate-card-enter hover:border-blue-500 hover:bg-white transition-all duration-300 cursor-pointer" style={{ animationDelay: `${filteredPolicies.length * 80}ms` }}>
-              <div className="bg-brand-gray-100 text-gray-700 w-16 h-16 flex items-center justify-center rounded-full mb-4 overflow-hidden">
+            <div id="add-policy-card" onClick={() => openPolicyOnboarding()} className="border-2 border-dashed border-brand-gray-200 rounded-2xl flex flex-col items-center justify-center p-4 md:p-6 text-center animate-card-enter hover:border-blue-500 hover:bg-white transition-all duration-300 cursor-pointer min-h-[280px]" style={{ animationDelay: `${filteredPolicies.length * 80}ms` }}>
+              <div className="bg-brand-gray-100 text-gray-700 w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center rounded-full mb-4 overflow-hidden">
                 <img 
                   src="/icons/plus.gif" 
                   alt="Add" 
                   className="w-full h-full object-cover" 
                 />
               </div>
-              <h3 className="font-bold text-lg text-brand-gray-600">Add New Policy</h3>
-              <p className="text-sm text-gray-700 mb-6">Upload and organize your insurance documents securely</p>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105">Get Started</button>
+              <h3 className="font-bold text-base sm:text-lg text-brand-gray-600">Add New Policy</h3>
+              <p className="text-xs sm:text-sm text-gray-700 mb-4 sm:mb-6 px-2">Upload and organize your insurance documents securely</p>
+              <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 sm:py-3 sm:px-6 rounded-lg transition-all duration-300 transform hover:scale-105 text-sm sm:text-base">Get Started</button>
             </div>
           </div>
         )

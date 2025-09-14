@@ -283,12 +283,9 @@ export default function Home() {
         <header id="header" className="fixed top-0 w-full glass-morphism border-b border-neutral-200/20 z-50 transition-all duration-300">
           <nav className="container mx-auto px-6 py-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="relative">
-                  <i className="fa-solid fa-shield-halved text-3xl gradient-text"></i>
-                  <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-blue-700 rounded-full blur opacity-20 animate-pulse-slow"></div>
-              </div>
-                <span className="text-2xl font-bold bg-gradient-to-r from-neutral-800 to-neutral-600 bg-clip-text text-transparent">iVault</span>
+            <div className="flex items-center space-x-3">  
+              <img src="/icons/shield.gif" alt="Shield" className="w-10 h-10" />
+              <span className="text-2xl font-bold bg-gradient-to-r from-neutral-800 to-neutral-600 bg-clip-text text-transparent">iVault</span>
             </div>
               
               <div className="hidden lg:flex items-center space-x-8">

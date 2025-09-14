@@ -19,12 +19,9 @@ function Header() {
             className="flex items-center space-x-3 cursor-pointer hover:opacity-90 transition-opacity"
             onClick={handleBackToHome}
           >
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-insurance-light to-insurance-blue flex items-center justify-center">
-              <img src="/icons/shield.gif" alt="Shield" className="w-6 h-6" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-insurance-blue">InsureVault</h1>
-              <p className="text-xs text-gray-700">Policy Management</p>
+            <div className="flex items-center space-x-3">  
+              <img src="/icons/shield.gif" alt="Shield" className="w-10 h-10" />
+              <span className="text-2xl font-bold bg-gradient-to-r from-neutral-800 to-neutral-600 bg-clip-text text-transparent">iVault</span>
             </div>
           </div>
 

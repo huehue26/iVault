@@ -194,15 +194,12 @@ export default function Auth() {
 
             {/* Sign In Form (left visible by default) */}
             <div className="sign-in-container absolute top-0 left-0 h-full w-1/2 z-20 transition-all duration-700 ease-in-out">
-              <div className="bg-white flex items-center justify-center flex-col px-12 h-full text-center">
+              <div className="flex items-center space-x-3 pt-10 ps-10">  
+                <img src="/icons/shield.gif" alt="Shield" className="w-10 h-10" />
+                <span className="text-2xl font-bold bg-gradient-to-r from-neutral-800 to-neutral-600 bg-clip-text text-transparent">iVault</span>
+              </div>
+              <div className="bg-white flex items-center justify-center flex-col px-12 h-3/4 text-center">
                 <form onSubmit={handleSignIn} className="w-full max-w-sm">
-                  <div className="flex items-center mb-6">
-                    <div className="bg-blue-600 p-3 rounded-lg mr-4"><i className="fa-solid fa-shield-halved text-white text-2xl" /></div>
-                    <div>
-                      <h1 className="text-2xl font-bold text-gray-800">InsureVault</h1>
-                      <p className="text-sm text-gray-700">Smart Policy Management</p>
-                    </div>
-                  </div>
                   <h2 className="text-3xl font-bold text-gray-800 mb-2">Welcome Back</h2>
                   <p className="text-gray-700 mb-6">Sign in to access your dashboard.</p>
                   <div className="relative mb-2">
