@@ -95,7 +95,106 @@ export default function ClaimDetails() {
             <div className="space-y-3 text-sm">
               <div className="flex justify-between"><span className="text-gray-700">Date of Incident</span><span className="font-medium text-gray-900">{claim.dateOfIncident}</span></div>
               <div className="flex justify-between"><span className="text-gray-700">Date Filed</span><span className="font-medium text-gray-900">{claim.dateFiled}</span></div>
-              <div className="flex justify-between"><span className="text-gray-700">Policy Holder</span><span className="font-medium text-gray-900">Sarah Johnson</span></div>
+              <div className="flex justify-between"><span className="text-gray-700">Policy Holder</span><span className="font-medium text-gray-900">{claim.user.name}</span></div>
+            </div>
+          </div>
+
+          <div className="bg-white/80 rounded-xl shadow-sm p-6 animate-slide-up transition-all duration-200 hover:shadow-md hover:-translate-y-0.5" style={{ animationDelay: "140ms" }}>
+            <h3 className="font-semibold text-gray-800 mb-4">Status History</h3>
+            <div className="space-y-4">
+              {/* Initial filing status */}
+              <div className="flex items-start space-x-3">
+                <div className="w-2 h-2 rounded-full bg-blue-500 mt-2 flex-shrink-0"></div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-gray-900">Claim Filed</span>
+                    <span className="text-xs text-gray-500">{claim.dateFiled}</span>
+                  </div>
+                  <p className="text-xs text-gray-600 mt-1">Initial claim submission</p>
+                </div>
+              </div>
+
+              {/* Status updates - show all updates that indicate status changes */}
+              {claim.updates
+                .filter(update => {
+                  const message = update.message.toLowerCase();
+                  return message.includes('received') ||
+                         message.includes('review') ||
+                         message.includes('approved') ||
+                         message.includes('denied') ||
+                         message.includes('processing') ||
+                         message.includes('processed');
+                })
+                .map((update, idx) => {
+                  const message = update.message.toLowerCase();
+                  let statusType = 'processing';
+                  let statusText = 'Processing Update';
+
+                  if (message.includes('approved')) {
+                    statusType = 'approved';
+                    statusText = 'Claim Approved';
+                  } else if (message.includes('denied')) {
+                    statusType = 'denied';
+                    statusText = 'Claim Denied';
+                  } else if (message.includes('received') || message.includes('review')) {
+                    statusType = 'processing';
+                    statusText = 'Under Review';
+                  } else if (message.includes('processed')) {
+                    statusType = 'approved';
+                    statusText = 'Payment Processed';
+                  }
+
+                  const statusColor = statusType === 'approved' ? 'bg-green-500' :
+                                    statusType === 'denied' ? 'bg-red-500' : 'bg-blue-500';
+
+                  return (
+                    <div key={idx} className="flex items-start space-x-3">
+                      <div className={`w-2 h-2 rounded-full ${statusColor} mt-2 flex-shrink-0`}></div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium text-gray-900">{statusText}</span>
+                          <span className="text-xs text-gray-500">{update.timestamp}</span>
+                        </div>
+                        <p className="text-xs text-gray-600 mt-1">{update.message}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+
+              {/* Current status if different from last update */}
+              {(() => {
+                const lastUpdate = claim.updates[claim.updates.length - 1];
+                const currentStatusMatchesLast = lastUpdate &&
+                  ((claim.status === 'Approved' && lastUpdate.message.toLowerCase().includes('approved')) ||
+                   (claim.status === 'Denied' && lastUpdate.message.toLowerCase().includes('denied')) ||
+                   (claim.status === 'Processing' && (lastUpdate.message.toLowerCase().includes('processing') || lastUpdate.message.toLowerCase().includes('review'))));
+
+                if (!currentStatusMatchesLast) {
+                  const statusColor = claim.status === 'Approved' ? 'bg-green-500' :
+                                    claim.status === 'Denied' ? 'bg-red-500' : 'bg-blue-500';
+
+                  return (
+                    <div className="flex items-start space-x-3">
+                      <div className={`w-2 h-2 rounded-full ${statusColor} mt-2 flex-shrink-0`}></div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium text-gray-900">Claim {claim.status}</span>
+                          <span className="text-xs text-gray-500">Current</span>
+                        </div>
+                        <p className="text-xs text-gray-600 mt-1">Latest claim status</p>
+                      </div>
+                    </div>
+                  );
+                }
+                return null;
+              })()}
+
+              {/* If no updates at all */}
+              {claim.updates.length === 0 && (
+                <div className="text-center py-4">
+                  <p className="text-xs text-gray-500">No status updates yet</p>
+                </div>
+              )}
             </div>
           </div>
         </div>

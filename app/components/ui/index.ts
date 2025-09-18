@@ -1,3 +1,9 @@
 export { default as Home } from './Home';
 export { default as WhatsAppFloatingIcon } from './WhatsAppFloatingIcon';
 export { default as FloatingIconsBackground } from './FloatingIconsBackground';
+export { default as ProfilePage } from './ProfilePage';
+export { default as AgentManagement } from './AgentManagement';
+export { default as PolicyDashboard } from './PolicyDashboard';
+export { default as QueryManagement } from './QueryManagement';
+export { default as RuleManagement } from './RuleManagement';
+export { default as ClaimManagement } from './ClaimManagement';

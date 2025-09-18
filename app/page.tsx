@@ -1,14 +1,18 @@
 "use client";
 
-import React, { memo } from "react";
-import { 
-  Header, 
-  Sidebar, 
-  Home, 
-  PolicyBank, 
-  ClaimDetails, 
-  PolicyDetails, 
+import React, { memo, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Header,
+  Sidebar,
+  Home,
+  PolicyBank,
+  PolicyManagement,
+  ClaimDetails,
+  PolicyDetails,
   ClaimAssistance,
+  ClaimsManagement,
+  ClaimManagementDetails,
   AddPolicyModal,
   FileClaimModal,
   PolicyOnboardingModal,
@@ -16,18 +20,29 @@ import {
   Auth,
   WhatsAppFloatingIcon
 } from "./components";
+import { AgentManagement, PolicyDashboard, QueryManagement, RuleManagement, ClaimManagement } from "./components/ui";
+import { ProfilePage } from "./components/ui";
 import { InsureProvider, useInsure } from "./store/insureStore";
 
 // Memoized components to prevent unnecessary re-renders
 const MemoizedHome = memo(Home);
 const MemoizedAuth = memo(Auth);
 const MemoizedPolicyBank = memo(PolicyBank);
+const MemoizedPolicyManagement = memo(PolicyManagement);
 const MemoizedClaimAssistance = memo(ClaimAssistance);
+const MemoizedClaimsManagement = memo(ClaimsManagement);
+const MemoizedClaimManagementDetails = memo(ClaimManagementDetails);
 const MemoizedClaimDetails = memo(ClaimDetails);
 const MemoizedPolicyDetails = memo(PolicyDetails);
+const MemoizedProfilePage = memo(ProfilePage);
+const MemoizedAgentManagement = memo(AgentManagement);
+const MemoizedPolicyDashboard = memo(PolicyDashboard);
+const MemoizedQueryManagement = memo(QueryManagement);
+const MemoizedRuleManagement = memo(RuleManagement);
+const MemoizedClaimManagement = memo(ClaimManagement);
 
 function ContentRouter() {
-  const { activePage, isAuthenticated } = useInsure();
+  const { activePage, isAuthenticated } = useInsure();  
   
   // Show home page if not authenticated
   if (!isAuthenticated) {
@@ -63,14 +78,32 @@ function ContentRouter() {
     switch (activePage) {
       case "policyBankPage":
         return <MemoizedPolicyBank key="policy-bank" />;
+      case "policyManagementPage":
+        return <MemoizedPolicyManagement key="policy-management" />;
+      case "policyDashboardPage":
+        return <MemoizedPolicyDashboard key="policy-dashboard" />;
+      case "agentManagementPage":
+        return <MemoizedAgentManagement key="agent-management" />;
+      case "queryManagementPage":
+        return <MemoizedQueryManagement key="query-management" />;
+      case "ruleManagementPage":
+        return <MemoizedRuleManagement key="rule-management" />;
       case "claimsPage":
         return <MemoizedClaimAssistance key="claims" />;
       case "claimDetailsPage":
         return <MemoizedClaimDetails key="claim-details" />;
       case "policyDetailsPage":
-        return <MemoizedPolicyDetails key="policy-details" />;
+        return <MemoizedPolicyDetails key={`policy-details-true`} />;
       case "claimAssistancePage":
         return <MemoizedClaimAssistance key="claim-assistance" />;
+      case "claimsManagementPage":
+        return <MemoizedClaimsManagement key="claims-management" />;
+      case "claimManagementDetailsPage":
+        return <MemoizedClaimManagementDetails key="claim-management-details" />;
+      case "claimManagementPage":
+        return <MemoizedClaimManagement key="claim-management" />;
+      case "profilePage":
+        return <MemoizedProfilePage key="profile" />;
       default:
         return <MemoizedPolicyBank key="policy-bank-default" />;
     }

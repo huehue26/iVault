@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Dropdown</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Set the Inter font as the default font for the page */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* A simple transition for the dropdown menu's appearance */
+        .dropdown-menu {
+            transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <!-- This container holds the button and the dropdown menu -->
+    <div class="relative inline-block text-left">
+        
+        <!-- Button to toggle the dropdown menu visibility -->
+        <div>
+            <button id="menu-button" type="button" class="inline-flex items-center justify-center w-full rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-800 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-orange-500" aria-expanded="false" aria-haspopup="true">
+                <img class="w-8 h-8 rounded-full mr-3" src="https://placehold.co/100x100/d1d5db/374151?text=NK" alt="User Avatar">
+                Natashia Khaleira
+                <svg class="-mr-1 ml-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- The Dropdown Menu panel, hidden by default -->
+        <div id="dropdown-menu" class="dropdown-menu origin-top-right absolute right-0 mt-2 w-72 rounded-xl shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none hidden z-10" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+            <div class="p-2" role="none">
+                 <!-- Header Section -->
+                <div class="flex items-center p-3">
+                    <img class="w-12 h-12 rounded-full" src="https://placehold.co/100x100/d1d5db/374151?text=NK" alt="User Avatar">
+                    <div class="ml-3">
+                        <p class="text-sm font-semibold text-gray-900">Natashia Khaleira</p>
+                        <p class="text-sm text-gray-500">jonson@bress.com</p>
+                    </div>
+                </div>
+
+                <!-- Menu Items Section -->
+                <div class="border-t border-gray-100 mt-1 pt-1" role="none">
+                    <a href="#" class="text-orange-500 font-semibold bg-orange-50 block px-4 py-2.5 text-sm rounded-lg" role="menuitem" tabindex="-1">My Profile</a>
+                    <a href="#" class="text-gray-600 hover:bg-gray-100 hover:text-gray-900 block px-4 py-2.5 text-sm rounded-lg" role="menuitem" tabindex="-1">My Balance</a>
+                    <a href="#" class="text-gray-600 hover:bg-gray-100 hover:text-gray-900 block px-4 py-2.5 text-sm rounded-lg" role="menuitem" tabindex="-1">My Bank</a>
+                    <a href="#" class="text-gray-600 hover:bg-gray-100 hover:text-gray-900 block px-4 py-2.5 text-sm rounded-lg" role="menuitem" tabindex="-1">Change Password</a>
+                </div>
+
+                <!-- Action Button Section -->
+                <div class="mt-2">
+                     <button class="w-full text-left bg-orange-500 text-white rounded-lg p-3 flex items-center justify-between hover:bg-orange-600 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-400">
+                        <div class="flex items-center">
+                            <img class="w-10 h-10 rounded-full" src="https://placehold.co/100x100/d1d5db/374151?text=NK" alt="User Avatar">
+                            <div class="ml-3">
+                                <p class="text-sm font-semibold">Natashia Khaleira</p>
+                                <p class="text-xs opacity-90">jonson@bress.com</p>
+                            </div>
+                        </div>
+                        <div class="bg-white/30 rounded-full p-1">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                            </svg>
+                        </div>
+                    </button>
+                </div>
+                 <!-- Logout Button Section -->
+                <div class="border-t border-gray-100 mt-2 pt-1" role="none">
+                    <a href="#" class="text-gray-600 hover:bg-gray-100 hover:text-gray-900 block w-full text-left px-4 py-2.5 text-sm rounded-lg flex items-center" role="menuitem" tabindex="-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get references to the button and the menu
+        const menuButton = document.getElementById('menu-button');
+        const dropdownMenu = document.getElementById('dropdown-menu');
+        let isMenuOpen = false;
+
+        // Function to toggle the menu's visibility
+        const toggleMenu = () => {
+            isMenuOpen = !isMenuOpen;
+            dropdownMenu.classList.toggle('hidden');
+            menuButton.setAttribute('aria-expanded', isMenuOpen);
+        };
+        
+        // Add a click event listener to the button
+        menuButton.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent the click from bubbling up to the document
+            toggleMenu();
+        });
+
+        // Add a click event listener to the whole document to close the menu
+        // if the user clicks anywhere outside of it.
+        document.addEventListener('click', (event) => {
+            if (isMenuOpen && !dropdownMenu.contains(event.target) && !menuButton.contains(event.target)) {
+                toggleMenu();
+            }
+        });
+
+        // Optional: Close the menu when the 'Escape' key is pressed
+        document.addEventListener('keydown', (event) => {
+            if (isMenuOpen && event.key === 'Escape') {
+                toggleMenu();
+            }
+        });
+    </script>
+
+</body>
+</html>
+

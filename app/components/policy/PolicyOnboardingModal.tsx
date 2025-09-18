@@ -72,7 +72,7 @@ const stepTitles = [
 ];
 
 export default function PolicyOnboardingModal() {
-  const { modals, closePolicyOnboarding, addPolicy, uploadedFile } = useInsure();
+  const { modals, closePolicyOnboarding, addPolicy, uploadedFile, prePopulatedPolicy } = useInsure();
   const [currentStep, setCurrentStep] = useState(1);
   const [policyData, setPolicyData] = useState<PolicyData>({
     policyFile: null,
@@ -90,8 +90,23 @@ export default function PolicyOnboardingModal() {
   // Reset modal when opened
   useEffect(() => {
     if (modals.policyOnboardingOpen) {
-      // If a file was uploaded via drag and drop, skip to step 2
-      if (uploadedFile) {
+      // If pre-populated policy data exists, populate form and jump to step 4
+      if (prePopulatedPolicy) {
+        const policyType = prePopulatedPolicy.type.replace(' Insurance', '');
+        setCurrentStep(4); // Jump directly to upload documents step
+        setPolicyData({
+          policyFile: null, // No file since we're coming from existing policy
+          policyType: policyType as any,
+          questions: {
+            policyHolder: prePopulatedPolicy.insurer || '',
+            providerName: prePopulatedPolicy.insurer || '',
+            coverageAmount: prePopulatedPolicy.coverageAmount.toString(),
+            // Add other relevant fields based on policy type
+          },
+          additionalDocs: {}
+        });
+      } else if (uploadedFile) {
+        // If a file was uploaded via drag and drop, skip to step 2
         setCurrentStep(2);
         setPolicyData({
           policyFile: uploadedFile,
@@ -109,7 +124,7 @@ export default function PolicyOnboardingModal() {
         });
       }
     }
-  }, [modals.policyOnboardingOpen, uploadedFile]);
+  }, [modals.policyOnboardingOpen, uploadedFile, prePopulatedPolicy]);
 
   const updatePolicyData = useCallback((updates: Partial<PolicyData>) => {
     setPolicyData(prev => ({ ...prev, ...updates }));
@@ -122,25 +137,33 @@ export default function PolicyOnboardingModal() {
   }, []);
 
   const handleSubmit = useCallback(() => {
-    // Create a new policy object
-    const newPolicy = {
-      type: `${policyData.policyType} Insurance`,
-      insurer: policyData.questions.providerName || `${policyData.policyType} Provider`,
-      policyNumber: `${policyData.policyType?.substring(0, 2).toUpperCase()}-${Date.now()}`,
-      premium: Math.floor(Math.random() * 500) + 50, // Random premium for demo
-      expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      missingDocuments: [],
-      coverageAmount: Math.floor(Math.random() * 100000) + 10000, // Random coverage amount for demo
-      documents: 1 + Object.keys(policyData.additionalDocs).length,
-      status: "Active" as const,
-      icon: getPolicyIcon(policyData.policyType || ''),
-      iconBg: getPolicyIconBg(policyData.policyType || ''),
-      iconColor: getPolicyIconColor(policyData.policyType || '')
-    };
+    if (prePopulatedPolicy) {
+      // If we have pre-populated policy, we're updating documents for existing policy
+      // In a real app, this would update the existing policy with new documents
+      console.log('Updating documents for existing policy:', prePopulatedPolicy.policyNumber);
+      console.log('New documents added:', Object.keys(policyData.additionalDocs).length);
+      closePolicyOnboarding();
+    } else {
+      // Create a new policy object
+      const newPolicy = {
+        type: `${policyData.policyType} Insurance`,
+        insurer: policyData.questions.providerName || `${policyData.policyType} Provider`,
+        policyNumber: `${policyData.policyType?.substring(0, 2).toUpperCase()}-${Date.now()}`,
+        premium: Math.floor(Math.random() * 500) + 50, // Random premium for demo
+        expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        missingDocuments: [],
+        coverageAmount: Math.floor(Math.random() * 100000) + 10000, // Random coverage amount for demo
+        documents: 1 + Object.keys(policyData.additionalDocs).length,
+        status: "Active" as const,
+        icon: getPolicyIcon(policyData.policyType || ''),
+        iconBg: getPolicyIconBg(policyData.policyType || ''),
+        iconColor: getPolicyIconColor(policyData.policyType || '')
+      };
 
-    addPolicy(newPolicy);
-    closePolicyOnboarding();
-  }, [policyData, addPolicy, closePolicyOnboarding]);
+      addPolicy(newPolicy);
+      closePolicyOnboarding();
+    }
+  }, [policyData, prePopulatedPolicy, addPolicy, closePolicyOnboarding]);
 
   const nextStep = useCallback(() => {
     if (currentStep < totalSteps) {
@@ -152,10 +175,14 @@ export default function PolicyOnboardingModal() {
   }, [currentStep, goToStep, handleSubmit]);
 
   const prevStep = useCallback(() => {
+    // Don't allow going back to previous steps when using pre-populated data
+    if (prePopulatedPolicy) {
+      return;
+    }
     if (currentStep > 1) {
       goToStep(currentStep - 1);
     }
-  }, [currentStep, goToStep]);
+  }, [currentStep, goToStep, prePopulatedPolicy]);
 
   const handleFileUpload = useCallback((file: File) => {
     updatePolicyData({ policyFile: file });
@@ -259,6 +286,18 @@ export default function PolicyOnboardingModal() {
   const progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
 
   const isStepValid = () => {
+    // If we have pre-populated data, earlier steps are considered valid
+    if (prePopulatedPolicy) {
+      switch (currentStep) {
+        case 1: return true; // Skip file upload for existing policies
+        case 2: return true; // Policy type is pre-populated
+        case 3: return true; // Questions are optional
+        case 4: return true; // Documents are optional
+        case 5: return true;
+        default: return false;
+      }
+    }
+
     switch (currentStep) {
       case 1: return policyData.policyFile !== null;
       case 2: return policyData.policyType !== null;
@@ -552,12 +591,14 @@ export default function PolicyOnboardingModal() {
                 {expandedSections['policy-type'] && (
                   <div className="px-4 pb-4 border-t">
                     <p className="text-gray-800 pt-4">{policyData.policyType} Insurance</p>
-                    <button 
-                      className="text-sm text-blue-600 font-semibold hover:underline mt-2"
-                      onClick={() => goToStep(2)}
-                    >
-                      Edit
-                    </button>
+                    {!prePopulatedPolicy && (
+                      <button
+                        className="text-sm text-blue-600 font-semibold hover:underline mt-2"
+                        onClick={() => goToStep(2)}
+                      >
+                        Edit
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
@@ -585,12 +626,14 @@ export default function PolicyOnboardingModal() {
                         );
                       })}
                     </dl>
-                    <button 
-                      className="text-sm text-blue-600 font-semibold hover:underline mt-4"
-                      onClick={() => goToStep(3)}
-                    >
-                      Edit
-                    </button>
+                    {!prePopulatedPolicy && (
+                      <button
+                        className="text-sm text-blue-600 font-semibold hover:underline mt-4"
+                        onClick={() => goToStep(3)}
+                      >
+                        Edit
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
@@ -622,12 +665,14 @@ export default function PolicyOnboardingModal() {
                         );
                       })}
                     </ul>
-                    <button 
-                      className="text-sm text-blue-600 font-semibold hover:underline mt-4"
-                      onClick={() => goToStep(4)}
-                    >
-                      Edit
-                    </button>
+                    {!prePopulatedPolicy && (
+                      <button
+                        className="text-sm text-blue-600 font-semibold hover:underline mt-4"
+                        onClick={() => goToStep(4)}
+                      >
+                        Edit
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
@@ -636,10 +681,11 @@ export default function PolicyOnboardingModal() {
         </div>
 
         {/* Navigation */}
-        <div className={`${currentStep === 1 ? 'justify-end' : 'justify-between'} p-6 bg-gray-50 border-t flex items-center`}>
+        <div className={`${currentStep === 1 || prePopulatedPolicy ? 'justify-end' : 'justify-between'} p-6 bg-gray-50 border-t flex items-center`}>
           <button
             onClick={prevStep}
-            className={`${currentStep === 1 ? 'hidden' : 'visible'} flex items-center space-x-2 px-6 py-2 border border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity`}
+            disabled={prePopulatedPolicy}
+            className={`${currentStep === 1 || prePopulatedPolicy ? 'hidden' : 'visible'} flex items-center space-x-2 px-6 py-2 border border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity`}
           >
             <i className="fa-solid fa-arrow-left"></i>
             <span>Previous</span>
@@ -650,7 +696,7 @@ export default function PolicyOnboardingModal() {
             disabled={!isStepValid()}
             className="flex items-center space-x-2 px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition-opacity"
           >
-            <span>{currentStep === totalSteps ? 'Submit Application' : 'Next'}</span>
+            <span>{currentStep === totalSteps ? (prePopulatedPolicy ? 'Upload Documents' : 'Submit Application') : 'Next'}</span>
             {currentStep === totalSteps ? (
               <i className="fa-solid fa-check ml-2"></i>
             ) : (

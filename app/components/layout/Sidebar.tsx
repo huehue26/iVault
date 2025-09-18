@@ -3,18 +3,14 @@
 import React, { memo, useCallback } from "react";
 import { useInsure } from "../../store/insureStore";
 
-type PageKey = "homePage" | "loginPage" | "policyBankPage" | "claimsPage" | "claimDetailsPage" | "policyDetailsPage" | "claimAssistancePage";
+type PageKey = "homePage" | "loginPage" | "policyBankPage" | "claimsPage" | "claimDetailsPage" | "policyDetailsPage" | "claimAssistancePage" | "policyManagementPage" | "claimsManagementPage" | "claimManagementDetailsPage" | "agentManagementPage" | "policyDashboardPage" | "queryManagementPage" | "ruleManagementPage" | "claimManagementPage";
 
 function Sidebar() {
-  const { activePage, setActivePage, isAuthenticated, logout } = useInsure();
-  
+  const { activePage, setActivePage, userRole } = useInsure();
+
   const handlePageChange = useCallback((key: PageKey) => {
     setActivePage(key);
   }, [setActivePage]);
-
-  const handleLogout = useCallback(() => {
-    logout();
-  }, [logout]);
 
   const link = (key: PageKey | null, iconSrc: string, label: string, onClick?: () => void) => (
     <a
@@ -43,17 +39,35 @@ function Sidebar() {
         </div>
 
         <nav className="space-y-2">
-          {link("policyBankPage", "/icons/folder.gif", "Policy Bank")}
-          {link("claimAssistancePage", "/icons/headset.gif", "Claim Assistance", () => handlePageChange("claimAssistancePage"))}
+          {/* User Role Navigation */}
+          {userRole === "user" && (
+            <>
+              {link("policyBankPage", "/icons/folder.gif", "Policy Bank")}
+              {link("claimAssistancePage", "/icons/headset.gif", "Claim Assistance")}
+            </>
+          )}
+          
+          {/* Agent Role Navigation */}
+          {userRole === "agent" && (
+            <>
+              {link("policyManagementPage", "/icons/users.gif", "Policy Management")}
+              {link("claimManagementPage", "/icons/file-invoice.gif", "Assigned Claims")}
+            </>
+          )}
+          
+          {/* Admin Role Navigation */}
+          {userRole === "admin" && (
+            <>
+              {link("agentManagementPage", "/icons/agent.gif", "Agent Management")}
+              {link("policyDashboardPage", "/icons/grid.gif", "Policy Dashboard")}
+              {link("ruleManagementPage", "/icons/gear.gif", "Rule Management")}
+              {link("claimManagementPage", "/icons/file-invoice.gif", "Claim Management")}
+            </>
+          )}
         </nav>
 
         <div className="mt-auto animate-slide-up" style={{ animationDelay: "140ms" }}>
-          {isAuthenticated && (
-            <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2 p-3 rounded-lg text-red-600 hover:bg-red-600 hover:text-white bg-red-50 transition-colors cursor-pointer">
-              <img src="/icons/logout.gif" alt="Logout" className="w- h-7 mix-blend-multiply" />
-              <span className="text-sm font-medium">Log out</span>
-            </button>
-          )}
+          {/* Logout functionality moved to header dropdown */}
         </div>
       </div>
     </aside>

@@ -79,6 +79,10 @@ export default function PolicyBank() {
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [isDragOver, setIsDragOver] = useState(false);
   const [settingsMenuOpen, setSettingsMenuOpen] = useState<string | null>(null);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => { e.preventDefault(); setIsDragOver(true); }, []);
   const handleDragLeave = useCallback((e: React.DragEvent<HTMLDivElement>) => { e.preventDefault(); setIsDragOver(false); }, []);
   const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => { 
@@ -139,6 +143,17 @@ export default function PolicyBank() {
     return matchesSearch && matchesCategory && matchesStatus;
   }), [policies, searchTerm, selectedCategory, selectedStatus]);
 
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredPolicies.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedPolicies = filteredPolicies.slice(startIndex, endIndex);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedCategory, selectedStatus]);
+
 
   return (
     <main className="page-content p-8">
@@ -195,7 +210,7 @@ export default function PolicyBank() {
 
       <section className="bg-white p-4 rounded-xl shadow-sm mb-8 flex items-center justify-between">
         <div className="flex items-center gap-4 w-full">
-          <div className="relative w-1/3">
+          <div className="relative flex-1">
             <img src="/icons/search.gif" alt="Search" className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 mix-blend-multiply" />
             <input type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search policies..." className="w-full bg-gray-100 border-none rounded-lg py-3 pl-11 pr-4 transition-all text-gray-800 placeholder-gray-500" />
           </div>
@@ -206,7 +221,7 @@ export default function PolicyBank() {
             {statuses.map(s => (<option key={s} value={s}>{s === "All" ? "All Status" : s}</option>))}
           </select>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 ms-4">
           <button 
             onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")} 
             className="rounded-lg cursor-pointer transition-all duration-300"
@@ -232,7 +247,7 @@ export default function PolicyBank() {
           <EmptyDropZone isDragOver={isDragOver} onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop} onClickCta={() => openPolicyOnboarding()} />
         ) : (
           <div id="policy-grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {filteredPolicies.map((p, idx) => (
+            {paginatedPolicies.map((p, idx) => (
               <div key={p.policyNumber} onClick={() => { setActivePolicyNumber(p.policyNumber); setActivePage("policyDetailsPage"); }} className="relative group bg-white p-4 md:p-6 rounded-2xl shadow-sm animate-card-enter hover:shadow-lg transition-all duration-300 cursor-pointer min-h-[280px] flex flex-col" style={{ animationDelay: `${idx * 80}ms`}}>
                 {/* Group icon in top right corner - overlaying outside */}
                 <div className="bg-blue-500 absolute w-9 h-9 -top-2 -right-2 rounded-full flex items-center justify-center transition-colors duration-200 shadow-lg border-2">
@@ -303,100 +318,212 @@ export default function PolicyBank() {
           </div>
         )
       ) : (
-        <PolicyListView 
-          policies={filteredPolicies} 
+        <PolicyListView
+          policies={paginatedPolicies}
+          filteredPoliciesLength={filteredPolicies.length}
           settingsMenuOpen={settingsMenuOpen}
           handleSettingsClick={handleSettingsClick}
           handlePolicyAction={handlePolicyAction}
         />
       )}
+
+      {/* Pagination Controls */}
+      {filteredPolicies.length > 0 && totalPages > 1 && (
+        <div className="bg-white p-4 rounded-xl shadow-sm mt-8">
+          <div className="flex items-center justify-between">
+            {/* Items per page selector */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-700">Show:</span>
+              <select
+                value={itemsPerPage}
+                onChange={(e) => {
+                  setItemsPerPage(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                className="px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+              >
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={25}>25</option>
+                <option value={50}>50</option>
+              </select>
+              <span className="text-sm text-gray-700">per page</span>
+            </div>
+
+            {/* Page navigation */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-gray-900"
+              >
+                <i className="fa-solid fa-chevron-left"></i>
+              </button>
+
+              {/* Page numbers */}
+              <div className="flex gap-1">
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  let pageNum;
+                  if (totalPages <= 5) {
+                    pageNum = i + 1;
+                  } else if (currentPage <= 3) {
+                    pageNum = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNum = totalPages - 4 + i;
+                  } else {
+                    pageNum = currentPage - 2 + i;
+                  }
+
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={`px-3 py-1 text-sm border rounded transition-colors ${
+                        currentPage === pageNum
+                          ? 'bg-blue-600 text-white border-blue-600'
+                          : 'bg-white border-gray-300 hover:bg-gray-50 text-gray-900'
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-gray-900"
+              >
+                <i className="fa-solid fa-chevron-right"></i>
+              </button>
+            </div>
+
+            {/* Page info */}
+            <div className="text-sm text-gray-700">
+              Page {currentPage} of {totalPages}
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
 
-function PolicyListView({ 
-  policies, 
-  settingsMenuOpen, 
-  handleSettingsClick, 
+function PolicyListView({
+  policies,
+  filteredPoliciesLength,
+  settingsMenuOpen,
+  handleSettingsClick,
   handlePolicyAction
-}: { 
+}: {
   policies: Array<{ policyNumber: string; type: string; insurer: string; premium: number; coverageAmount: number; expires: string; status: string; iconBg: string; iconColor: string; icon: string; documents: number; missingDocuments: string[] }>;
+  filteredPoliciesLength: number;
   settingsMenuOpen: string | null;
   handleSettingsClick: (e: React.MouseEvent, policyNumber: string) => void;
   handlePolicyAction: (action: string, policyNumber: string) => void;
 }) {
   const { setActivePolicyNumber, setActivePage } = useInsure();
-  const sorted = useMemo(() => [...policies].sort((a, b) => new Date(a.expires).getTime() - new Date(b.expires).getTime()), [policies]);
-  const row = (p: { policyNumber: string; type: string; insurer: string; premium: number; coverageAmount: number; expires: string; status: string; iconBg: string; iconColor: string; icon: string; documents: number; missingDocuments: string[] }, idx: number) => (
-    <div key={p.policyNumber} onClick={() => { setActivePolicyNumber(p.policyNumber); setActivePage("policyDetailsPage"); }} className="group grid grid-cols-12 gap-4 items-center px-4 py-4 bg-white rounded-xl shadow-sm border border-gray-100 cursor-pointer transition-all hover:shadow-lg hover:-mt-1 transition-all duration-30 hover:shadow-lg animate-list-enter relative" style={{ animationDelay: `${idx * 60}ms` }}>
-      {/* Group icon in top right corner - overlaying outside */}
-      <div className="absolute -top-2 -right-2 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-200 shadow-lg border-2 border-white">
-        <img src="/icons/users.gif" alt="Users" className="w-6 h-6 rounded-full" />
-      </div>
-      
-      
-      <div className="col-span-12 md:col-span-4 flex items-center space-x-3">
-        <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-transform duration-200 group-hover:scale-110`}>
-          <img src={p.icon} alt={p.type} className="w-10 h-10" />
-          </div>
-        <div>
-          <p className="text-sm font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">{p.type}</p>
-          <p className="text-xs text-gray-700">{p.insurer}</p>
-        </div>
-      </div>
-      <div className="col-span-6 md:col-span-2 text-sm text-gray-600 font-mono">{p.policyNumber}</div>
-      <div className="col-span-6 md:col-span-1 text-sm text-gray-800 font-medium">${p.premium}/mo</div>
-      <div className="col-span-6 md:col-span-1 text-sm text-gray-800 font-medium">${p.coverageAmount}</div>
-      <div className={`col-span-6 md:col-span-2 text-sm font-medium ${p.status === "Expiring Soon" ? "text-warning-red" : "text-gray-900"}`}>{formatDate(p.expires)}</div>
-      <div className="col-span-6 md:col-span-2 flex items-center justify-between pe-14">
-        <div>
-          {p.status === "Active" && (
-            <span className="block rounded-full px-3 py-1 text-xs font-semibold bg-green-100 text-green-700">Active</span>
-          )}
-          {p.status === "Expiring Soon" && (
-            <span className="block rounded-full px-3 py-1 text-xs font-semibold bg-amber-100 text-amber-700">Expiring Soon</span>
-          )}
-        </div>
-        <div className="relative flex-shrink-0 overflow-visible">
-          <button 
-            onClick={(e) => handleSettingsClick(e, p.policyNumber)}
-            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
-            title="Settings"
-          >
-            <img src="/icons/gear.gif" alt="Settings" className="w-6 h-6 text-gray-600" />
-          </button>
-          <SettingsDropdown 
-            isOpen={settingsMenuOpen === p.policyNumber}
-            policyNumber={p.policyNumber}
-            onAction={handlePolicyAction}
-          />
-        </div>
-      </div>
-    </div>
-  );
 
   return (
-    <div id="policiesList" className="animate-fade-in">
-      <div className="hidden md:grid grid-cols-12 gap-4 px-4 py-3 text-xs font-bold text-gray-700 uppercase rounded-t-lg bg-gray-50">
-        <div className="col-span-4">Policy</div>
-        <div className="col-span-2">Policy Number</div>
-        <div className="col-span-1">Premium</div>
-        <div className="col-span-1">Coverage</div>
-        <div className="col-span-2">Expires</div>
-        <div className="col-span-2">Status</div>
-      </div>
-      <div className="space-y-3 mt-2">
-        {sorted.map((p, idx) => row(p, idx))}
-      </div>
-    </div>
+    <main className="page-content">
+      {/* Policies List */}
+      <section className="bg-white rounded-xl shadow-sm overflow-hidden">
+        {/* Table Header */}
+        <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-gray-200 bg-gray-50">
+          <div className="col-span-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">Policy Details</div>
+          <div className="col-span-2 text-xs font-semibold text-gray-700 uppercase tracking-wider">Coverage</div>
+          <div className="col-span-2 text-xs font-semibold text-gray-700 uppercase tracking-wider">Premium</div>
+          <div className="col-span-2 text-xs font-semibold text-gray-700 uppercase tracking-wider">Expiry</div>
+          <div className="col-span-2 text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</div>
+          <div className="col-span-1"></div>
+        </div>
+
+        {/* Policies */}
+        <div className="divide-y divide-gray-200">
+          {policies.map((policy, idx) => (
+            <div key={policy.policyNumber} className="group grid grid-cols-12 gap-4 p-6 items-center hover:bg-gray-50 transition-colors cursor-pointer" onClick={() => {
+              setActivePolicyNumber(policy.policyNumber);
+              setActivePage("policyDetailsPage");
+            }}>
+              {/* Policy Details */}
+              <div className="col-span-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 flex items-center justify-center rounded-lg">
+                    <img src={policy.icon} alt={policy.type} className="w-10 h-10" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">{policy.type}</p>
+                    <p className="text-sm text-gray-600">{policy.insurer}</p>
+                    <p className="text-xs text-gray-500">{policy.policyNumber}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Coverage */}
+              <div className="col-span-2">
+                <p className="font-semibold text-gray-900">${policy.coverageAmount.toLocaleString()}</p>
+              </div>
+
+              {/* Premium */}
+              <div className="col-span-2">
+                <p className="font-semibold text-gray-900">${policy.premium}</p>
+              </div>
+
+              {/* Expiry */}
+              <div className="col-span-2">
+                <p className="font-semibold text-gray-900">{formatDate(policy.expires)}</p>
+              </div>
+
+              {/* Status */}
+              <div className="col-span-2">
+                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                  policy.status === 'Active' ? 'bg-green-100 text-green-800' :
+                  policy.status === 'Expiring Soon' ? 'bg-yellow-100 text-yellow-800' :
+                  'bg-gray-100 text-gray-800'
+                }`}>
+                  {policy.status}
+                </span>
+              </div>
+
+              {/* Actions */}
+              <div className="col-span-1 flex items-center justify-center">
+                <div className="relative flex-shrink-0 overflow-visible">
+                  <button
+                    onClick={(e) => handleSettingsClick(e, policy.policyNumber)}
+                    className="flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors w-8 h-8"
+                    title="Settings"
+                  >
+                    <img src="/icons/gear.gif" alt="Settings" className="w-6 h-6 text-gray-600" />
+                  </button>
+                  <SettingsDropdown
+                    isOpen={settingsMenuOpen === policy.policyNumber}
+                    policyNumber={policy.policyNumber}
+                    onAction={handlePolicyAction}
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {filteredPoliciesLength === 0 && (
+          <div className="p-12 text-center">
+            <img src="/icons/folder.gif" alt="No policies" className="w-16 h-16 mx-auto mb-4 opacity-50" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No policies found</h3>
+            <p className="text-gray-600">Try adjusting your search criteria or filters.</p>
+          </div>
+        )}
+      </section>
+    </main>
   );
 }
 
 function EmptyDropZone({ isDragOver, onDragOver, onDragLeave, onDrop, onClickCta }: { isDragOver: boolean; onDragOver: (e: React.DragEvent<HTMLDivElement>) => void; onDragLeave: (e: React.DragEvent<HTMLDivElement>) => void; onDrop: (e: React.DragEvent<HTMLDivElement>) => void; onClickCta: () => void; }) {
   return (
     <div className={`dropzone ${isDragOver ? "drag-over border-blue-500 bg-blue-50" : "border-brand-gray-200 bg-white"} flex flex-col items-center justify-center p-12 rounded-2xl`} onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop}>
-      <div className={`w-20 h-20 rounded-full flex items-center justify-center mb-4 transition-transform ${isDragOver ? "scale-110 bg-blue-500 text-white animate-wiggle" : "bg-brand-gray-100 text-gray-700 animate-bounce-subtle"}`}>
-        <img src="/icons/upload.gif" alt="Upload" className="w-12 h-12" />
+      <div className={`rounded-full flex items-center justify-center mb-4 transition-transform ${isDragOver ? "scale-110 animate-wiggle" : "animate-bounce-subtle"}`}>
+        <img src="/icons/plus.gif" alt="Upload" className="w-20 h-20 mix-blend-multiply" />
       </div>
       <h3 className="text-xl font-bold text-brand-gray-600 mb-1">No policies found</h3>
       <p className="text-gray-700 mb-6">Drag and drop your policy file here, or click below to upload</p>

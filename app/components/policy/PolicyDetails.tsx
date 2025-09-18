@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { useInsure } from "../../store/insureStore";
+import { useInsure, formatDate, Policy } from "../../store/insureStore";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 interface GroupMember {
@@ -10,6 +10,14 @@ interface GroupMember {
   name: string;
   code: string;
   relationship: string;
+}
+
+interface PolicyFeature {
+  id: number;
+  title: string;
+  description: string;
+  icon: string;
+  category: 'core' | 'additional';
 }
 
 function ProgressRow({ label, value, color }: { label: string; value: number; color: string }) {
@@ -27,9 +35,12 @@ function ProgressRow({ label, value, color }: { label: string; value: number; co
 }
 
 export default function PolicyDetails() {
-  const { activePolicyNumber, policies, setActivePage, setActivePolicyNumber } = useInsure();
+  const { activePolicyNumber, policies, setActivePage, setActivePolicyNumber, isAgentView, setIsAgentView, openPolicyOnboardingWithData } = useInsure();
+  // Temporarily hardcode to true until roles integration
+  const agentViewEnabled = true; // TODO: Replace with proper role checking
   const policy = policies.find(p => p.policyNumber === activePolicyNumber);
-  
+
+
   const uploadInputRef = useRef<HTMLInputElement | null>(null);
   const [uploadedDocs, setUploadedDocs] = useState<{ name: string; sizeKb: number; url?: string; mime?: string }[]>([
     { name: "Policy_Document.pdf", sizeKb: 128, url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", mime: "application/pdf" },
@@ -40,7 +51,48 @@ export default function PolicyDetails() {
   const [previewMime, setPreviewMime] = useState<string | undefined>(undefined);
   // Tab management state
   const [activeTab, setActiveTab] = useState<'features' | 'groups'>('features');
+
+  // Agent edit mode state
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editedPolicy, setEditedPolicy] = useState<Partial<Policy> | null>(null);
+  const [successMessage, setSuccessMessage] = useState("");
+
+  // Initialize edited policy when policy changes
+  useEffect(() => {
+    if (policy) {
+      setEditedPolicy({ ...policy });
+    }
+  }, [policy]);
+
+  // Handle save policy changes
+  const handleSavePolicy = () => {
+    // In a real app, this would update the policy in the backend
+    console.log('Saving policy:', editedPolicy);
+    if (editedPolicy?.policyNumber) {
+      setSuccessMessage(`Policy ${editedPolicy.policyNumber} updated successfully`);
+    } else {
+      setSuccessMessage('Policy updated successfully');
+    }
+    setIsEditMode(false);
+    setTimeout(() => setSuccessMessage(""), 3000);
+  };
+
+  // Handle cancel policy edit
+  const handleCancelPolicyEdit = () => {
+    setEditedPolicy({ ...policy });
+    setIsEditMode(false);
+  };
   
+  // Feature management state
+  const [policyFeatures, setPolicyFeatures] = useState<PolicyFeature[]>([
+    { id: 1, title: 'In-patient Hospitalization', description: 'Covers room rent, ICU charges, doctor\'s fees, and other related expenses.', icon: '/icons/hospital-doctor.gif', category: 'core' },
+    { id: 2, title: 'Pre & Post-Hospitalization', description: 'Covers medical expenses for 60 days before and 90 days after hospitalization.', icon: '/icons/notes-medical.gif', category: 'core' },
+    { id: 3, title: 'Day Care Procedures', description: 'Covers medical treatments that do not require 24-hour hospitalization.', icon: '/icons/clock.gif', category: 'core' },
+    { id: 4, title: 'Maternity and Newborn Care', description: 'Coverage for childbirth and newborn baby expenses up to $5,000.', icon: '/icons/baby.gif', category: 'additional' }
+  ]);
+  const [editingFeatureId, setEditingFeatureId] = useState<number | null>(null);
+  const [featureValidationErrors, setFeatureValidationErrors] = useState<{[key: string]: string}>({});
+
   // Group management state
   const [groupMembers, setGroupMembers] = useState<GroupMember[]>([
     { id: 1, name: 'John Doe', code: 'GRP-001-JD', relationship: 'Spouse' },
@@ -142,16 +194,157 @@ export default function PolicyDetails() {
     setValidationErrors({});
   };
 
+  // Feature management functions
+  const validateFeature = (feature: Partial<PolicyFeature>) => {
+    const errors: {[key: string]: string} = {};
+
+    if (!feature.title || feature.title.trim() === '') {
+      errors.title = 'Title is required';
+    }
+    if (!feature.description || feature.description.trim() === '') {
+      errors.description = 'Description is required';
+    }
+    if (!feature.category) {
+      errors.category = 'Category is required';
+    }
+
+    return errors;
+  };
+
+  const handleEditFeature = (id: number) => {
+    setEditingFeatureId(id);
+    setFeatureValidationErrors({});
+  };
+
+  const handleSaveFeature = (id: number, field: keyof PolicyFeature, value: string) => {
+    setPolicyFeatures(prev => prev.map(feature =>
+      feature.id === id ? { ...feature, [field]: value } : feature
+    ));
+
+    // Clear validation error for this field
+    if (featureValidationErrors[field]) {
+      setFeatureValidationErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
+    }
+  };
+
+  const handleSaveFeatureEdit = (id: number) => {
+    const feature = policyFeatures.find(f => f.id === id);
+    if (!feature) return;
+
+    const errors = validateFeature(feature);
+    if (Object.keys(errors).length > 0) {
+      setFeatureValidationErrors(errors);
+      return;
+    }
+
+    setEditingFeatureId(null);
+    setFeatureValidationErrors({});
+  };
+
+  const handleCancelFeatureEdit = () => {
+    setEditingFeatureId(null);
+    setFeatureValidationErrors({});
+  };
+
+  const handleDeleteFeature = (id: number) => {
+    setPolicyFeatures(prev => prev.filter(feature => feature.id !== id));
+  };
+
+  const handleAddFeature = () => {
+    const newId = policyFeatures.length ? Math.max(...policyFeatures.map(f => f.id)) + 1 : 1;
+    const newFeature: PolicyFeature = {
+      id: newId,
+      title: '',
+      description: '',
+      icon: '/icons/shield.gif', // Default icon
+      category: 'core'
+    };
+    setPolicyFeatures(prev => [...prev, newFeature]);
+    setEditingFeatureId(newId);
+    setFeatureValidationErrors({});
+  };
+
   if (!policy) return null;
 
   return (
     <main className="page-content p-8 animate-fade-in">
-      <header className="flex items-center mb-6">
-        <button onClick={() => { setActivePolicyNumber(null); setActivePage("policyBankPage"); }} className="text-gray-700 hover:text-gray-800 mr-3">
-          <i className="fa-solid fa-arrow-left text-lg" />
-        </button>
-        <h1 className="text-xl font-bold text-gray-800">Policy Details</h1>
+      <header className="flex items-center justify-between mb-6">
+        <div className="flex items-center">
+          <button onClick={() => { setActivePolicyNumber(null); setIsAgentView(false); setActivePage(isAgentView ? "policyManagementPage" : "policyBankPage"); }} className="text-gray-700 hover:text-gray-800 mr-3">
+            <i className="fa-solid fa-arrow-left text-lg" />
+          </button>
+          <h1 className="text-xl font-bold text-gray-800">Policy Details</h1>
+        </div>
+        {agentViewEnabled && (
+          <div className="flex items-center gap-3">
+            {isEditMode ? (
+              <>
+                <button
+                  onClick={handleCancelPolicyEdit}
+                  className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSavePolicy}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Save Changes
+                </button>
+              </>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                {/* Primary Action - Edit Policy */}
+                <button
+                  onClick={() => setIsEditMode(true)}
+                  className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center gap-1.5 text-sm font-medium"
+                >
+                  <i className="fa-solid fa-edit"></i>
+                  Edit Policy
+                </button>
+
+                {/* Approval Action - Approve */}
+                <button
+                  onClick={() => {
+                    console.log('Approving policy:', policy?.policyNumber);
+                    setSuccessMessage(`Policy ${policy?.policyNumber} has been approved successfully`);
+                    setTimeout(() => setSuccessMessage(""), 3000);
+                  }}
+                  className="px-3 py-2 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white rounded-md transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center gap-1.5 text-sm font-medium"
+                >
+                  <i className="fa-solid fa-check"></i>
+                  Approve
+                </button>
+
+                {/* Secondary Action - Retrigger Insights */}
+                <button
+                  onClick={() => {
+                    console.log('Retriggering insights for policy:', policy?.policyNumber);
+                    setSuccessMessage(`Insights retriggered for policy ${policy?.policyNumber}`);
+                    setTimeout(() => setSuccessMessage(""), 3000);
+                  }}
+                  className="px-3 py-2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-md transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center gap-1.5 text-sm font-medium"
+                >
+                  <i className="fa-solid fa-refresh"></i>
+                  Retrigger Insights
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </header>
+
+      {/* Success Message */}
+      {successMessage && (
+        <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3 animate-slide-up">
+          <i className="fa-solid fa-check-circle text-green-600"></i>
+          <span className="text-green-800 font-medium">{successMessage}</span>
+        </div>
+      )}
 
       <div className="p-8 grid grid-cols-12 gap-8">
         <div className="col-span-12 lg:col-span-8 space-y-8">
@@ -161,8 +354,29 @@ export default function PolicyDetails() {
                 <img src={policy.icon} alt="Clock" className="w-14 h-14" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-gray-800">{policy.type}</h2>
-                <p className="text-gray-700">Policy No: {policy.policyNumber}</p>
+                {isEditMode ? (
+                  <div className="space-y-2">
+                    <input
+                      type="text"
+                      value={editedPolicy?.type || ''}
+                      onChange={(e) => setEditedPolicy({ ...editedPolicy, type: e.target.value })}
+                      className="text-2xl font-bold text-gray-800 bg-transparent border-b border-gray-300 focus:border-blue-500 focus:outline-none px-1 py-0.5"
+                      placeholder="Policy Type"
+                    />
+                    <input
+                      type="text"
+                      value={editedPolicy?.policyNumber || ''}
+                      onChange={(e) => setEditedPolicy({ ...editedPolicy, policyNumber: e.target.value })}
+                      className="text-gray-700 bg-transparent border-b border-gray-300 focus:border-blue-500 focus:outline-none px-1 py-0.5"
+                      placeholder="Policy Number"
+                    />
+                  </div>
+                ) : (
+                  <>
+                    <h2 className="text-2xl font-bold text-gray-800">{policy.type}</h2>
+                    <p className="text-gray-700">Policy No: {policy.policyNumber}</p>
+                  </>
+                )}
               </div>
             </div>
             <div className="text-center">
@@ -176,6 +390,133 @@ export default function PolicyDetails() {
               >
                 <i className="fa-solid fa-download text-2xl group-hover:animate-bounce"></i>
               </button>
+            </div>
+          </div>
+
+          {/* Policy Details Section */}
+          <div className="bg-white p-3 rounded-xl shadow-sm">
+            <div className="grid grid-cols-1 gap-3">
+              {/* Basic Information Card */}
+              <div className="bg-gray-50 p-3 rounded-xl">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center">
+                    <img src="/icons/file-invoice.gif" alt="Policy" className="w-10 h-10 mix-blend-multiply" />
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-800">Basic Information</h4>
+                    <p className="text-sm text-gray-600">Policy fundamentals</p>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center py-2">
+                    <span className="text-gray-600 font-medium">Expiry Date:</span>
+                    {isEditMode ? (
+                      <input
+                        type="date"
+                        value={editedPolicy?.expires || ''}
+                        onChange={(e) => setEditedPolicy({ ...editedPolicy, expires: e.target.value })}
+                        className="font-semibold text-gray-900 bg-transparent border-b border-gray-300 focus:border-blue-500 focus:outline-none px-1 py-0.5"
+                      />
+                    ) : (
+                      <span className="font-semibold text-gray-900">{formatDate(policy.expires)}</span>
+                    )}
+                  </div>
+                  <div className="flex justify-between items-center py-2">
+                    <span className="text-gray-600 font-medium">Insurance Provider:</span>
+                    {isEditMode ? (
+                      <input
+                        type="text"
+                        value={editedPolicy?.insurer || ''}
+                        onChange={(e) => setEditedPolicy({ ...editedPolicy, insurer: e.target.value })}
+                        className="font-semibold text-gray-900 bg-transparent border-b border-gray-300 focus:border-blue-500 focus:outline-none px-1 py-0.5"
+                        placeholder="Insurance Provider"
+                      />
+                    ) : (
+                      <span className="font-semibold text-gray-900">{policy.insurer}</span>
+                    )}
+                  </div>
+                  <div className="flex justify-between items-center py-2">
+                    <span className="text-gray-600 font-medium">Status:</span>
+                    {isEditMode ? (
+                      <select
+                        value={editedPolicy?.status || ''}
+                        onChange={(e) => setEditedPolicy({ ...editedPolicy, status: e.target.value })}
+                        className="font-semibold text-gray-900 bg-transparent border-b border-gray-300 focus:border-blue-500 focus:outline-none px-1 py-0.5"
+                      >
+                        <option value="Active">Active</option>
+                        <option value="Expiring Soon">Expiring Soon</option>
+                        <option value="Expired">Expired</option>
+                        <option value="Pending">Pending</option>
+                      </select>
+                    ) : (
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        policy.status === 'Active' ? 'bg-green-100 text-green-800' :
+                        policy.status === 'Expiring Soon' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {policy.status}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Coverage Details Card */}
+              <div className="bg-gray-50 p-6 rounded-xl">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center">
+                    <img src="/icons/shield.gif" alt="Shield" className="w-10 h-10 mix-blend-multiply" />
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-800">Coverage Details</h4>
+                    <p className="text-sm text-gray-600">Your protection coverage</p>
+                  </div>
+                </div>
+                <div className="p-4 bg-white rounded-lg border border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div>
+                        <p className="text-gray-700 font-medium">Coverage Amount</p>
+                        <p className="text-xs text-gray-500">Maximum protection limit</p>
+                      </div>
+                      <div className="mt-2">
+                        {isEditMode ? (
+                          <input
+                            type="number"
+                            value={editedPolicy?.coverageAmount || ''}
+                            onChange={(e) => setEditedPolicy({ ...editedPolicy, coverageAmount: Number(e.target.value) })}
+                            className="text-2xl font-bold text-gray-900 bg-transparent border-b border-gray-300 focus:border-blue-500 focus:outline-none px-1 py-0.5 w-full"
+                            placeholder="Coverage Amount"
+                          />
+                        ) : (
+                          <p className="text-2xl font-bold text-gray-900">${policy.coverageAmount.toLocaleString()}</p>
+                        )}
+                        <p className="text-xs text-gray-500">USD</p>
+                      </div>
+                    </div>
+                    <div className="border-l border-gray-200 pl-6 ml-6 flex-1">
+                      <div>
+                        <p className="text-gray-700 font-medium">Monthly Premium</p>
+                        <p className="text-xs text-gray-500">Payment amount</p>
+                      </div>
+                      <div className="mt-2">
+                        {isEditMode ? (
+                          <input
+                            type="number"
+                            value={editedPolicy?.premium || ''}
+                            onChange={(e) => setEditedPolicy({ ...editedPolicy, premium: Number(e.target.value) })}
+                            className="text-2xl font-bold text-gray-900 bg-transparent border-b border-gray-300 focus:border-blue-500 focus:outline-none px-1 py-0.5 w-full"
+                            placeholder="Monthly Premium"
+                          />
+                        ) : (
+                          <p className="text-2xl font-bold text-gray-900">${policy.premium}</p>
+                        )}
+                        <p className="text-xs text-gray-500">per month</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -211,38 +552,179 @@ export default function PolicyDetails() {
               <div className="p-6">
                 {activeTab === 'features' && (
                   <div className="space-y-4">
-                    <h3 className="text-xl font-bold mb-5 text-gray-800">Policy Features</h3>
+                    <div className="flex justify-between items-center mb-6">
+                      <h3 className="text-xl font-bold text-gray-800">Policy Features</h3>
+                      {isEditMode && (
+                        <button
+                          onClick={handleAddFeature}
+                          className="flex items-center bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-5 py-2.5 rounded-lg transition-all duration-300 text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105"
+                        >
+                          <i className="fa-solid fa-plus w-4 h-4 mr-2"></i>
+                          Add New Feature
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Feature Validation Error Display */}
+                    {Object.keys(featureValidationErrors).length > 0 && (
+                      <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                        <div className="flex items-center space-x-2">
+                          <i className="fa-solid fa-exclamation-triangle text-red-500"></i>
+                          <span className="text-sm font-medium text-red-800">Please fill in all required fields:</span>
+                        </div>
+                        <ul className="mt-2 text-sm text-red-700">
+                          {Object.entries(featureValidationErrors).map(([field, error]) => (
+                            <li key={field} className="flex items-center space-x-2">
+                              <i className="fa-solid fa-circle text-red-400 text-xs"></i>
+                              <span>{error}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
                     <div className="space-y-4">
-                      <p className="text-sm font-semibold text-gray-700 uppercase tracking-wider">Core Coverage</p>
-                      <div className="p-4 border border-gray-100 rounded-xl flex items-start space-x-4">
-                        <div className="rounded-lg flex items-center justify-center flex-shrink-0"><img src="/icons/hospital-doctor.gif" alt="Bed" className="w-11 h-11 text-blue-500" /></div>
-                        <div>
-                          <h4 className="font-semibold text-gray-800">In-patient Hospitalization</h4>
-                          <p className="text-sm text-gray-700">Covers room rent, ICU charges, doctor&apos;s fees, and other related expenses.</p>
-                        </div>
-                      </div>
-                      <div className="p-4 border border-gray-100 rounded-xl flex items-start space-x-4">
-                        <div className="rounded-lg flex items-center justify-center flex-shrink-0"><img src="/icons/notes-medical.gif" alt="Medical" className="w-11 h-11 text-green-500" /></div>
-                        <div>
-                          <h4 className="font-semibold text-gray-800">Pre & Post-Hospitalization</h4>
-                          <p className="text-sm text-gray-700">Covers medical expenses for 60 days before and 90 days after hospitalization.</p>
-                        </div>
-                      </div>
-                      <div className="p-4 border border-gray-100 rounded-xl flex items-start space-x-4">
-                        <div className="rounded-lg flex items-center justify-center flex-shrink-0"><img src="/icons/clock.gif" alt="Clock" className="w-11 h-11 text-blue-500" /></div>
-                        <div>
-                          <h4 className="font-semibold text-gray-800">Day Care Procedures</h4>
-                          <p className="text-sm text-gray-700">Covers medical treatments that do not require 24-hour hospitalization.</p>
-                        </div>
-                      </div>
-                      <p className="text-sm font-semibold text-gray-700 uppercase tracking-wider pt-4">Additional Benefits</p>
-                      <div className="p-4 border border-gray-100 rounded-xl flex items-start space-x-4">
-                        <div className="rounded-lg flex items-center justify-center flex-shrink-0"><img src="/icons/baby.gif" alt="Baby" className="w-11 h-11 text-pink-500" /></div>
-                        <div>
-                          <h4 className="font-semibold text-gray-800">Maternity and Newborn Care</h4>
-                          <p className="text-sm text-gray-700">Coverage for childbirth and newborn baby expenses up to $5,000.</p>
-                        </div>
-                      </div>
+                      {['core', 'additional'].map(category => {
+                        const categoryFeatures = policyFeatures.filter(f => f.category === category);
+
+                        return (
+                          <div key={category}>
+                            <div className="flex items-center justify-between mb-3">
+                              <p className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                                {category === 'core' ? 'Core Coverage' : 'Additional Benefits'}
+                              </p>
+                              {isEditMode && categoryFeatures.length === 0 && (
+                                <span className="text-xs text-blue-600 font-medium">
+                                  No {category === 'core' ? 'core' : 'additional'} features yet
+                                </span>
+                              )}
+                            </div>
+                            {categoryFeatures.length === 0 && isEditMode ? (
+                              <div className="text-center py-8 px-4 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200 mb-4">
+                                <div className="text-gray-400 mb-2">
+                                  <i className="fa-solid fa-plus-circle text-2xl"></i>
+                                </div>
+                                <p className="text-sm text-gray-600 mb-2">
+                                  No {category === 'core' ? 'core coverage' : 'additional benefit'} features added yet
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  Click "Add New Feature" to get started
+                                </p>
+                              </div>
+                            ) : (
+                              categoryFeatures.map((feature) => {
+                              const isEditing = feature.id === editingFeatureId;
+                              return (
+                                <div key={feature.id} className="p-4 border border-gray-100 rounded-xl flex items-start space-x-4 group">
+                                  <div className="rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <img src={feature.icon} alt="Feature" className="w-11 h-11" />
+                                  </div>
+                                  <div className="flex-1">
+                                    {isEditing ? (
+                                      <div className="space-y-4 bg-blue-50 p-4 rounded-lg border border-blue-200">
+                                        <div className="space-y-2">
+                                          <label className="text-sm font-semibold text-gray-800 block">Feature Title</label>
+                                          <input
+                                            type="text"
+                                            value={feature.title}
+                                            onChange={(e) => handleSaveFeature(feature.id, 'title', e.target.value)}
+                                            className={`w-full p-3 border rounded-lg text-base font-medium text-gray-900 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${featureValidationErrors.title ? 'border-red-300 bg-red-50' : 'border-gray-300'}`}
+                                            placeholder="Enter feature title (e.g., Dental Coverage)"
+                                            autoFocus
+                                          />
+                                          {featureValidationErrors.title && (
+                                            <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
+                                              <i className="fa-solid fa-exclamation-circle"></i>
+                                              {featureValidationErrors.title}
+                                            </p>
+                                          )}
+                                        </div>
+                                        <div className="space-y-2">
+                                          <label className="text-sm font-semibold text-gray-800 block">Description</label>
+                                          <textarea
+                                            value={feature.description}
+                                            onChange={(e) => handleSaveFeature(feature.id, 'description', e.target.value)}
+                                            className={`w-full p-3 border rounded-lg text-base text-gray-800 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none ${featureValidationErrors.description ? 'border-red-300 bg-red-50' : 'border-gray-300'}`}
+                                            placeholder="Describe the feature benefits and coverage details"
+                                            rows={3}
+                                          />
+                                          {featureValidationErrors.description && (
+                                            <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
+                                              <i className="fa-solid fa-exclamation-circle"></i>
+                                              {featureValidationErrors.description}
+                                            </p>
+                                          )}
+                                        </div>
+                                        <div className="space-y-2">
+                                          <label className="text-sm font-semibold text-gray-800 block">Category</label>
+                                          <select
+                                            value={feature.category}
+                                            onChange={(e) => handleSaveFeature(feature.id, 'category', e.target.value)}
+                                            className={`w-full p-3 border rounded-lg text-base text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${featureValidationErrors.category ? 'border-red-300 bg-red-50' : 'border-gray-300'}`}
+                                          >
+                                            <option value="core">Core Coverage - Essential policy benefits</option>
+                                            <option value="additional">Additional Benefits - Optional enhancements</option>
+                                          </select>
+                                          {featureValidationErrors.category && (
+                                            <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
+                                              <i className="fa-solid fa-exclamation-circle"></i>
+                                              {featureValidationErrors.category}
+                                            </p>
+                                          )}
+                                        </div>
+                                        <div className="flex items-center justify-end space-x-3 pt-2">
+                                          <button
+                                            onClick={handleCancelFeatureEdit}
+                                            className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                                            title="Cancel editing"
+                                          >
+                                            <i className="fa-solid fa-xmark w-4 h-4 mr-2"></i>
+                                            Cancel
+                                          </button>
+                                          <button
+                                            onClick={() => handleSaveFeatureEdit(feature.id)}
+                                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm"
+                                            title="Save changes"
+                                          >
+                                            <i className="fa-solid fa-check w-4 h-4 mr-2"></i>
+                                            Save Feature
+                                          </button>
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      <div className="flex justify-between items-start">
+                                        <div>
+                                          <h4 className="font-semibold text-gray-800">{feature.title}</h4>
+                                          <p className="text-sm text-gray-700">{feature.description}</p>
+                                        </div>
+                                        {isEditMode && (
+                                          <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <button
+                                              onClick={() => handleEditFeature(feature.id)}
+                                              className="text-blue-600 hover:text-blue-900 p-2 rounded-lg hover:bg-blue-50 transition-colors"
+                                              title="Edit feature"
+                                            >
+                                              <i className="fa-solid fa-pen-to-square w-4 h-4"></i>
+                                            </button>
+                                            <button
+                                              onClick={() => handleDeleteFeature(feature.id)}
+                                              className="text-red-600 hover:text-red-900 p-2 rounded-lg hover:bg-red-50 transition-colors"
+                                              title="Delete feature"
+                                            >
+                                              <i className="fa-solid fa-trash w-4 h-4"></i>
+                                            </button>
+                                          </div>
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              );
+                            })
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
@@ -480,7 +962,7 @@ export default function PolicyDetails() {
                         <img src="/icons/circle-exclamation.gif" alt="Alert" className="w-6 h-6 text-orange-600 mix-blend-multiply" />
                         <span className="text-sm font-medium text-gray-800">{item.name}</span>
                       </div>
-                      <button onClick={handleUploadClick} title="Upload" aria-label="Upload missing document" className="text-orange-700 hover:text-orange-800 bg-white border border-orange-300 rounded-full w-8 h-8 flex items-center justify-center">
+                      <button onClick={() => policy && openPolicyOnboardingWithData(policy)} title="Upload" aria-label="Upload missing document" className="text-orange-700 hover:text-orange-800 bg-white border border-orange-300 rounded-full w-8 h-8 flex items-center justify-center">
                         <i className="fa-solid fa-upload" />
                       </button>
                     </li>
