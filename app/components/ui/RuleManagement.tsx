@@ -120,7 +120,7 @@ export default function RuleManagement() {
     setIsAddModalOpen(false);
   };
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = (field: string, value: string | boolean | number) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -231,7 +231,7 @@ export default function RuleManagement() {
       {/* Rules List */}
       <section className="bg-white rounded-xl shadow-sm overflow-hidden">
         <div className="divide-y divide-gray-200">
-          {filteredRules.map((rule, idx) => (
+          {filteredRules.map((rule) => (
             <div key={rule.id} className="p-6 hover:bg-gray-50 transition-colors">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex-1">

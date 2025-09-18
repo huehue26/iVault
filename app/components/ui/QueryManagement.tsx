@@ -235,7 +235,7 @@ export default function QueryManagement() {
       {/* Queries List */}
       <section className="bg-white rounded-xl shadow-sm overflow-hidden">
         <div className="divide-y divide-gray-200">
-          {filteredQueries.map((query, idx) => (
+          {filteredQueries.map((query) => (
             <div key={query.id} className="p-6 hover:bg-gray-50 transition-colors">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex-1">

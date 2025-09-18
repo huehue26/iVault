@@ -117,7 +117,6 @@ export default function PolicyDetails() {
       .filter(item => !item.satisfied);
   }, [missingDocs, uploadedDocs]);
 
-  function handleUploadClick() { uploadInputRef.current?.click(); }
   function openPreview(url?: string, mime?: string) { if (!url) return; setPreviewUrl(url); setPreviewMime(mime); }
   function closePreview() { setPreviewUrl(null); setPreviewMime(undefined); }
 
@@ -608,7 +607,7 @@ export default function PolicyDetails() {
                                   No {category === 'core' ? 'core coverage' : 'additional benefit'} features added yet
                                 </p>
                                 <p className="text-xs text-gray-500">
-                                  Click "Add New Feature" to get started
+                                  Click &quot;Add New Feature&quot; to get started
                                 </p>
                               </div>
                             ) : (

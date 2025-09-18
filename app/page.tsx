@@ -1,7 +1,6 @@
 "use client";
 
-import React, { memo, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import React, { memo } from "react";
 import {
   Header,
   Sidebar,
@@ -20,8 +19,7 @@ import {
   Auth,
   WhatsAppFloatingIcon
 } from "./components";
-import { AgentManagement, PolicyDashboard, QueryManagement, RuleManagement, ClaimManagement } from "./components/ui";
-import { ProfilePage } from "./components/ui";
+import { AgentManagement, PolicyDashboard, QueryManagement, RuleManagement, ClaimManagement, ProfilePage } from "./components/ui";
 import { InsureProvider, useInsure } from "./store/insureStore";
 
 // Memoized components to prevent unnecessary re-renders

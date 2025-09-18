@@ -208,7 +208,7 @@ function StatusUpdateDropdown({ currentStatus, onStatusChange }: {
   onStatusChange: (status: string) => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState(currentStatus);
+  const [, setSelectedStatus] = useState(currentStatus);
 
   const statusOptions = [
     { value: "Processing", label: "Processing", color: "text-blue-600", bgColor: "bg-blue-50", borderColor: "border-blue-200" },

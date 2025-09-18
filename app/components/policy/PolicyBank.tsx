@@ -227,12 +227,12 @@ export default function PolicyBank() {
             className="rounded-lg cursor-pointer transition-all duration-300"
           >
             <div className="relative w-10 h-10 flex items-center justify-center">
-              <img src="/icons/grid.gif" className={`w-10 h-10 mix-blend-multiply ${
+              <img src="/icons/grid.gif" alt="Grid view" className={`w-10 h-10 mix-blend-multiply ${
                   viewMode === "grid" 
                     ? "hidden" 
                     : "block"
                   }`} />
-              <img src="/icons/list.gif" className={`w-10 h-10 mix-blend-multiply ${
+              <img src="/icons/list.gif" alt="List view" className={`w-10 h-10 mix-blend-multiply ${
                   viewMode === "list" 
                     ? "hidden" 
                     : "block"
@@ -441,7 +441,7 @@ function PolicyListView({
 
         {/* Policies */}
         <div className="divide-y divide-gray-200">
-          {policies.map((policy, idx) => (
+          {policies.map((policy) => (
             <div key={policy.policyNumber} className="group grid grid-cols-12 gap-4 p-6 items-center hover:bg-gray-50 transition-colors cursor-pointer" onClick={() => {
               setActivePolicyNumber(policy.policyNumber);
               setActivePage("policyDetailsPage");

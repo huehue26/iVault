@@ -102,7 +102,7 @@ export default function AgentManagement() {
     }
   };
 
-  const handleToggleStatus = (agentId: string) => {
+  const handleToggleStatus = (_agentId: string) => {
     setAgents(prev => prev.map(agent =>
       agent.id === agentId
         ? { ...agent, status: agent.status === "Active" ? "Inactive" : "Active" }
@@ -183,7 +183,7 @@ export default function AgentManagement() {
 
         {/* Agents */}
         <div className="divide-y divide-gray-200">
-          {filteredAgents.map((agent, idx) => (
+          {filteredAgents.map((agent) => (
             <div key={agent.id} className="group grid grid-cols-12 gap-4 p-6 items-center hover:bg-gray-50 transition-colors">
               {/* Agent Details */}
               <div className="col-span-3">

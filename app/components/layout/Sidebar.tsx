@@ -52,6 +52,7 @@ function Sidebar() {
             <>
               {link("policyManagementPage", "/icons/users.gif", "Policy Management")}
               {link("claimManagementPage", "/icons/file-invoice.gif", "Assigned Claims")}
+              {link("queryManagementPage", "/icons/headset.gif", "Query Management")}
             </>
           )}
           
@@ -62,6 +63,7 @@ function Sidebar() {
               {link("policyDashboardPage", "/icons/grid.gif", "Policy Dashboard")}
               {link("ruleManagementPage", "/icons/gear.gif", "Rule Management")}
               {link("claimManagementPage", "/icons/file-invoice.gif", "Claim Management")}
+              {link("queryManagementPage", "/icons/headset.gif", "Query Management")}
             </>
           )}
         </nav>

@@ -96,7 +96,7 @@ export default function PolicyOnboardingModal() {
         setCurrentStep(4); // Jump directly to upload documents step
         setPolicyData({
           policyFile: null, // No file since we're coming from existing policy
-          policyType: policyType as any,
+          policyType: policyType as string,
           questions: {
             policyHolder: prePopulatedPolicy.insurer || '',
             providerName: prePopulatedPolicy.insurer || '',

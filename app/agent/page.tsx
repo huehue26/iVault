@@ -14,7 +14,7 @@ import {
   ClaimFilingModal,
   WhatsAppFloatingIcon
 } from "../components";
-import { ProfilePage } from "../components/ui";
+import { ProfilePage, QueryManagement } from "../components/ui";
 import { InsureProvider, useInsure } from "../store/insureStore";
 
 function AgentContentRouter() {
@@ -38,6 +38,8 @@ function AgentContentRouter() {
         return <PolicyDetails key="policy-details" />;
       case "profilePage":
         return <ProfilePage key="profile" />;
+      case "queryManagementPage":
+        return <QueryManagement key="query-management" />;
       default:
         return <PolicyManagement key="policy-management-default" />;
     }

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
-import { useInsure, formatDate, Policy } from "../../store/insureStore";
+import { useInsure, formatDate } from "../../store/insureStore";
 
 export default function PolicyDashboard() {
   const { policies } = useInsure();
@@ -37,7 +37,7 @@ export default function PolicyDashboard() {
   }, [policies]);
 
   const filteredAndSortedPolicies = useMemo(() => {
-    let filtered = policies.filter(p => {
+    const filtered = policies.filter(p => {
       const matchesSearch = [p.type, p.insurer, p.policyNumber, p.premium.toString(), p.coverageAmount.toString()].some(v =>
         v.toLowerCase().includes(searchTerm.toLowerCase())
       );
@@ -50,7 +50,7 @@ export default function PolicyDashboard() {
 
     // Sort policies
     filtered.sort((a, b) => {
-      let aValue: any, bValue: any;
+      let aValue: string | number, bValue: string | number;
 
       switch (sortBy) {
         case "policyNumber":

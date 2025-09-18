@@ -29,7 +29,7 @@ export default function AssignedClaims() {
           <div className="col-span-1 text-xs font-semibold text-gray-700 uppercase tracking-wider text-right">Action</div>
         </div>
         <div className="space-y-2 mt-4">
-          {rows.map((r, idx) => (
+          {rows.map((r) => (
             <div key={r.id}
               className="grid grid-cols-12 gap-4 px-4 py-4 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
               onClick={() => {

@@ -15,7 +15,8 @@ import {
   PolicyDashboard, 
   RuleManagement, 
   ClaimManagement,
-  ProfilePage 
+  ProfilePage,
+  QueryManagement
 } from "../components/ui";
 import { InsureProvider, useInsure } from "../store/insureStore";
 
@@ -40,6 +41,8 @@ function AdminContentRouter() {
         return <ClaimManagement key="claim-management" />;
       case "profilePage":
         return <ProfilePage key="profile" />;
+      case "queryManagementPage":
+        return <QueryManagement key="query-management" />;
       default:
         return <AgentManagement key="agent-management-default" />;
     }

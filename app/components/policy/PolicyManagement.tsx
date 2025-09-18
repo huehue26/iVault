@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo } from "react";
 import { useInsure, formatDate } from "../../store/insureStore";
 
 export default function PolicyManagement() {
@@ -100,7 +100,7 @@ export default function PolicyManagement() {
 
         {/* Policies */}
         <div className="divide-y divide-gray-200">
-          {filteredPolicies.map((policy, idx) => (
+          {filteredPolicies.map((policy) => (
             <div key={policy.policyNumber} className="group grid grid-cols-12 gap-4 p-6 items-center hover:bg-gray-50 transition-colors cursor-pointer" onClick={() => {
               setActivePolicyNumber(policy.policyNumber);
               setIsAgentView(true);

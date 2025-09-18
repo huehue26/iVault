@@ -57,7 +57,7 @@ function Header() {
                 onClick={toggleDropdown}
                 type="button"
               >
-                <Image src="https://placehold.co/32x32/E2E8F0/475569?text=S" alt="Profile" width={32} height={32} className="w-8 h-8 rounded-full" />
+                <Image src="/icons/user-profile.png" alt="Profile" width={32} height={32} className="w-8 h-8 rounded-full" />
                 <div className="hidden md:block text-left">
                   <p className="text-sm font-medium text-gray-700">Sarah Johnson</p>
                   <p className="text-xs text-gray-500">Premium Member</p>
@@ -71,7 +71,7 @@ function Header() {
                   <div className="p-2">
                     {/* Header Section */}
                     <div className="flex items-center p-3">
-                      <Image src="https://placehold.co/48x48/E2E8F0/475569?text=S" alt="User Avatar" width={48} height={48} className="w-12 h-12 rounded-full" />
+                      <Image src="/icons/user-profile.png" alt="User Avatar" width={48} height={48} className="w-12 h-12 rounded-full" />
                       <div className="ml-3">
                         <p className="text-sm font-semibold text-gray-900">Sarah Johnson</p>
                         <p className="text-sm text-gray-500">sarah.johnson@email.com</p>
