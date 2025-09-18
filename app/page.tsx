@@ -19,7 +19,7 @@ import {
   Auth,
   WhatsAppFloatingIcon
 } from "./components";
-import { AgentManagement, PolicyDashboard, QueryManagement, RuleManagement, ClaimManagement, ProfilePage } from "./components/ui";
+import { AgentManagement,  QueryManagement, RuleManagement, ClaimManagement, ProfilePage, PolicyDashboard } from "./components/ui";
 import { InsureProvider, useInsure } from "./store/insureStore";
 
 // Memoized components to prevent unnecessary re-renders
@@ -34,10 +34,10 @@ const MemoizedClaimDetails = memo(ClaimDetails);
 const MemoizedPolicyDetails = memo(PolicyDetails);
 const MemoizedProfilePage = memo(ProfilePage);
 const MemoizedAgentManagement = memo(AgentManagement);
-const MemoizedPolicyDashboard = memo(PolicyDashboard);
 const MemoizedQueryManagement = memo(QueryManagement);
 const MemoizedRuleManagement = memo(RuleManagement);
 const MemoizedClaimManagement = memo(ClaimManagement);
+const MemoizedPolicyDashboard = memo(PolicyDashboard);
 
 function ContentRouter() {
   const { activePage, isAuthenticated } = useInsure();  
@@ -78,10 +78,10 @@ function ContentRouter() {
         return <MemoizedPolicyBank key="policy-bank" />;
       case "policyManagementPage":
         return <MemoizedPolicyManagement key="policy-management" />;
-      case "policyDashboardPage":
-        return <MemoizedPolicyDashboard key="policy-dashboard" />;
       case "agentManagementPage":
         return <MemoizedAgentManagement key="agent-management" />;
+      case "policyDashboardPage":
+        return <MemoizedPolicyDashboard key="policy-dashboard" />;
       case "queryManagementPage":
         return <MemoizedQueryManagement key="query-management" />;
       case "ruleManagementPage":

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
-import { useInsure, formatDate } from "../../store/insureStore";
+import { useInsure, formatDate, Policy } from "../../store/insureStore";
 
 export default function PolicyDashboard() {
   const { policies } = useInsure();
@@ -50,7 +50,7 @@ export default function PolicyDashboard() {
 
     // Sort policies
     filtered.sort((a, b) => {
-      let aValue: string | number, bValue: string | number;
+      let aValue: string|number|Date, bValue: string|number|Date;
 
       switch (sortBy) {
         case "policyNumber":

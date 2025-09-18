@@ -24,40 +24,7 @@ interface UserProfile {
   privacyLevel: string;
 }
 
-// Random icon generator
-const generateRandomIcon = (name: string): string => {
-  const icons = [
-    "fa-user", "fa-user-tie", "fa-user-graduate", "fa-user-nurse", "fa-user-md", 
-    "fa-user-astronaut", "fa-user-crown", "fa-user-ninja", "fa-user-secret", 
-    "fa-user-shield", "fa-user-check", "fa-user-clock", "fa-user-cog", "fa-user-edit",
-    "fa-user-friends", "fa-user-hard-hat", "fa-user-headset", "fa-user-injured",
-    "fa-user-lock", "fa-user-music", "fa-user-plus", "fa-user-tag", "fa-user-times",
-    "fa-user-visor", "fa-user-wrench", "fa-user-xmark", "fa-user-gear"
-  ];
-  
-  // Generate consistent icon based on name
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const iconIndex = Math.abs(hash) % icons.length;
-  return icons[iconIndex];
-};
 
-const getRandomIconColor = (name: string): string => {
-  const colors = [
-    "bg-blue-500", "bg-green-500", "bg-purple-500", "bg-pink-500", "bg-indigo-500",
-    "bg-red-500", "bg-yellow-500", "bg-teal-500", "bg-orange-500", "bg-cyan-500",
-    "bg-emerald-500", "bg-violet-500", "bg-rose-500", "bg-sky-500", "bg-lime-500"
-  ];
-  
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const colorIndex = Math.abs(hash) % colors.length;
-  return colors[colorIndex];
-};
 
 
 const ProfilePage = memo(() => {
@@ -117,9 +84,6 @@ const ProfilePage = memo(() => {
     setFormData(prev => ({ ...prev, [field]: value }));
   }, []);
 
-  const handleBackToHome = useCallback(() => {
-    setActivePage("homePage");
-  }, [setActivePage]);
 
   const handleDeleteAccount = useCallback(async () => {
     if (deleteConfirmation === "DELETE") {
@@ -672,7 +636,7 @@ const ProfilePage = memo(() => {
               </p>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Type "DELETE" to confirm:
+                  Type &quot;DELETE&quot; to confirm:
                 </label>
                 <input
                   type="text"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useInsure, formatDate, Policy } from "../../store/insureStore";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
@@ -41,7 +41,6 @@ export default function PolicyDetails() {
   const policy = policies.find(p => p.policyNumber === activePolicyNumber);
 
 
-  const uploadInputRef = useRef<HTMLInputElement | null>(null);
   const [uploadedDocs, setUploadedDocs] = useState<{ name: string; sizeKb: number; url?: string; mime?: string }[]>([
     { name: "Policy_Document.pdf", sizeKb: 128, url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", mime: "application/pdf" },
     { name: "Vehicle_Photo.jpg", sizeKb: 256, url: "https://placehold.co/1024x768?text=Vehicle+Photo", mime: "image/jpeg" },

@@ -12,11 +12,11 @@ import {
 } from "../components";
 import { 
   AgentManagement, 
-  PolicyDashboard, 
   RuleManagement, 
   ClaimManagement,
   ProfilePage,
-  QueryManagement
+  QueryManagement,
+  PolicyDashboard
 } from "../components/ui";
 import { InsureProvider, useInsure } from "../store/insureStore";
 

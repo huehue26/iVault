@@ -102,13 +102,6 @@ export default function AgentManagement() {
     }
   };
 
-  const handleToggleStatus = (_agentId: string) => {
-    setAgents(prev => prev.map(agent =>
-      agent.id === agentId
-        ? { ...agent, status: agent.status === "Active" ? "Inactive" : "Active" }
-        : agent
-    ));
-  };
 
   return (
     <main className="p-8">

@@ -7,6 +7,18 @@ interface ClaimData {
   selectedPolicyId: string | null;
   claimDetails: string;
   supportingDocs: File[];
+  personalInfo: {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+  };
+  incidentDetails: {
+    description: string;
+    location: string;
+    damageAmount: string;
+    witnesses: string;
+  };
 }
 
 const stepTitles = [
@@ -22,7 +34,19 @@ export default function ClaimFilingModal() {
   const [claimData, setClaimData] = useState<ClaimData>({
     selectedPolicyId: null,
     claimDetails: '',
-    supportingDocs: []
+    supportingDocs: [],
+    personalInfo: {
+      name: '',
+      email: '',
+      phone: '',
+      address: ''
+    },
+    incidentDetails: {
+      description: '',
+      location: '',
+      damageAmount: '',
+      witnesses: ''
+    }
   });
   const [isDragOver, setIsDragOver] = useState(false);
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
@@ -37,7 +61,19 @@ export default function ClaimFilingModal() {
       setClaimData({
         selectedPolicyId: null,
         claimDetails: '',
-        supportingDocs: []
+        supportingDocs: [],
+        personalInfo: {
+          name: '',
+          email: '',
+          phone: '',
+          address: ''
+        },
+        incidentDetails: {
+          description: '',
+          location: '',
+          damageAmount: '',
+          witnesses: ''
+        }
       });
       setExpandedSections({});
     }
@@ -74,7 +110,20 @@ export default function ClaimFilingModal() {
           message: "Your claim has been received and is under review.", 
           timestamp: new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })
         }
-      ]
+      ],
+      user: {
+        name: claimData.personalInfo?.name || "Unknown User",
+        email: claimData.personalInfo?.email || "unknown@email.com",
+        phone: claimData.personalInfo?.phone || "Unknown",
+        address: claimData.personalInfo?.address || "Unknown Address"
+      },
+      claimDetails: {
+        incidentDescription: claimData.incidentDetails?.description || "No description provided",
+        incidentLocation: claimData.incidentDetails?.location || "Unknown location",
+        estimatedDamage: claimData.incidentDetails?.damageAmount || "Unknown",
+        witnesses: claimData.incidentDetails?.witnesses || "None"
+      },
+      documents: []
     };
 
     addClaim(newClaim);

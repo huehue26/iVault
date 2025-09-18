@@ -684,7 +684,7 @@ export default function PolicyOnboardingModal() {
         <div className={`${currentStep === 1 || prePopulatedPolicy ? 'justify-end' : 'justify-between'} p-6 bg-gray-50 border-t flex items-center`}>
           <button
             onClick={prevStep}
-            disabled={prePopulatedPolicy}
+            disabled={prePopulatedPolicy ? false : false}
             className={`${currentStep === 1 || prePopulatedPolicy ? 'hidden' : 'visible'} flex items-center space-x-2 px-6 py-2 border border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity`}
           >
             <i className="fa-solid fa-arrow-left"></i>
